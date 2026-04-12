@@ -50,33 +50,22 @@ local function showLog(msg, color)
     label.Text = tostring(msg)
 
     task.delay(3, function()
-        if bg and bg.Parent then
-            bg:Destroy()
-        end
+        if bg and bg.Parent then bg:Destroy() end
     end)
 end
 
-local origWarn = warn
-hookfunction(warn, newcclosure(function(...)
-    local parts = {}
-    for _, v in ipairs({...}) do
-        table.insert(parts, tostring(v))
+game:GetService("ScriptContext").Error:Connect(function(msg, trace, script)
+    local text = tostring(msg)
+    if trace and trace ~= "" then
+        text = text .. "\n" .. tostring(trace)
     end
-    showLog("⚠ " .. table.concat(parts, " "), Color3.fromRGB(255, 200, 50))
-    return origWarn(...)
-end))
+    showLog("✖ " .. text, Color3.fromRGB(255, 80, 80))
+end)
 
-local origError = error
-hookfunction(error, newcclosure(function(msg, level)
-    showLog("✖ " .. debug.traceback(tostring(msg), 2), Color3.fromRGB(255, 80, 80))
-    return origError(msg, level)
-end))
-
-local origPcall = pcall
-hookfunction(pcall, newcclosure(function(fn, ...)
-    local results = table.pack(origPcall(fn, ...))
-    if not results[1] then
-        showLog("✖ " .. debug.traceback(tostring(results[2]), 2), Color3.fromRGB(255, 130, 50))
+game:GetService("LogService").MessageOut:Connect(function(msg, msgType)
+    if msgType == Enum.MessageType.MessageWarning then
+        showLog("⚠ " .. tostring(msg), Color3.fromRGB(255, 200, 50))
+    elseif msgType == Enum.MessageType.MessageError then
+        showLog("✖ " .. tostring(msg), Color3.fromRGB(255, 80, 80))
     end
-    return table.unpack(results, 1, results.n)
-end))
+end)
