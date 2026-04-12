@@ -61,11 +61,3 @@ game:GetService("ScriptContext").Error:Connect(function(msg, trace, script)
     end
     showLog("✖ " .. text, Color3.fromRGB(255, 80, 80))
 end)
-
-game:GetService("LogService").MessageOut:Connect(function(msg, msgType)
-    if msgType == Enum.MessageType.MessageWarning then
-        showLog("⚠ " .. tostring(msg), Color3.fromRGB(255, 200, 50))
-    elseif msgType == Enum.MessageType.MessageError then
-        showLog("✖ " .. tostring(msg), Color3.fromRGB(255, 80, 80))
-    end
-end)
