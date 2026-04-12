@@ -1,0 +1,82 @@
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "ErrorSpy"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = game:GetService("CoreGui")
+
+local Frame = Instance.new("Frame")
+Frame.Size = UDim2.new(0, 450, 0, 0)
+Frame.AutomaticSize = Enum.AutomaticSize.Y
+Frame.Position = UDim2.new(0, 10, 1, -10)
+Frame.AnchorPoint = Vector2.new(0, 1)
+Frame.BackgroundTransparency = 1
+Frame.Parent = ScreenGui
+
+local Layout = Instance.new("UIListLayout", Frame)
+Layout.Padding = UDim.new(0, 4)
+Layout.SortOrder = Enum.SortOrder.LayoutOrder
+Layout.VerticalAlignment = Enum.VerticalAlignment.Bottom
+Layout.FillDirection = Enum.FillDirection.Vertical
+
+local order = 0
+
+local function showLog(msg, color)
+    order = order + 1
+    local myOrder = order
+
+    local bg = Instance.new("Frame")
+    bg.Size = UDim2.new(1, 0, 0, 0)
+    bg.AutomaticSize = Enum.AutomaticSize.Y
+    bg.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+    bg.BackgroundTransparency = 0.3
+    bg.LayoutOrder = myOrder
+    bg.Parent = Frame
+    Instance.new("UICorner", bg).CornerRadius = UDim.new(0, 5)
+
+    local pad = Instance.new("UIPadding", bg)
+    pad.PaddingLeft = UDim.new(0, 8)
+    pad.PaddingRight = UDim.new(0, 8)
+    pad.PaddingTop = UDim.new(0, 4)
+    pad.PaddingBottom = UDim.new(0, 4)
+
+    local label = Instance.new("TextLabel", bg)
+    label.Size = UDim2.new(1, 0, 0, 0)
+    label.AutomaticSize = Enum.AutomaticSize.Y
+    label.BackgroundTransparency = 1
+    label.TextColor3 = color
+    label.TextSize = 12
+    label.Font = Enum.Font.Code
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.TextWrapped = true
+    label.Text = tostring(msg)
+
+    task.delay(3, function()
+        if bg and bg.Parent then
+            bg:Destroy()
+        end
+    end)
+end
+
+local origWarn = warn
+hookfunction(warn, newcclosure(function(...)
+    local parts = {}
+    for _, v in ipairs({...}) do
+        table.insert(parts, tostring(v))
+    end
+    showLog("⚠ " .. table.concat(parts, " "), Color3.fromRGB(255, 200, 50))
+    return origWarn(...)
+end))
+
+local origError = error
+hookfunction(error, newcclosure(function(msg, level)
+    showLog("✖ " .. debug.traceback(tostring(msg), 2), Color3.fromRGB(255, 80, 80))
+    return origError(msg, level)
+end))
+
+local origPcall = pcall
+hookfunction(pcall, newcclosure(function(fn, ...)
+    local results = table.pack(origPcall(fn, ...))
+    if not results[1] then
+        showLog("✖ " .. debug.traceback(tostring(results[2]), 2), Color3.fromRGB(255, 130, 50))
+    end
+    return table.unpack(results, 1, results.n)
+end))
