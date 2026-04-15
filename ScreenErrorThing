@@ -42,8 +42,15 @@ local function showLog(msg, color)
     pad.PaddingTop = UDim.new(0, 4)
     pad.PaddingBottom = UDim.new(0, 4)
 
+    -- layout interno vertical
+    local innerLayout = Instance.new("UIListLayout", bg)
+    innerLayout.Padding = UDim.new(0, 4)
+    innerLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    innerLayout.FillDirection = Enum.FillDirection.Vertical
+
     local label = Instance.new("TextLabel", bg)
-    label.Size = UDim2.new(1, -60, 0, 0)
+    label.LayoutOrder = 1
+    label.Size = UDim2.new(1, 0, 0, 0)
     label.AutomaticSize = Enum.AutomaticSize.Y
     label.BackgroundTransparency = 1
     label.TextColor3 = color
@@ -54,8 +61,8 @@ local function showLog(msg, color)
     label.Text = tostring(msg)
 
     local ignoreBtn = Instance.new("TextButton", bg)
-    ignoreBtn.Size = UDim2.new(0, 52, 0, 18)
-    ignoreBtn.Position = UDim2.new(1, -52, 0, 0)
+    ignoreBtn.LayoutOrder = 2
+    ignoreBtn.Size = UDim2.new(0, 110, 0, 18)
     ignoreBtn.BackgroundColor3 = Color3.fromRGB(60, 20, 20)
     ignoreBtn.BorderSizePixel = 0
     ignoreBtn.Text = "Don't show again"
