@@ -58,7 +58,7 @@ local function showLog(msg, color)
     ignoreBtn.Position = UDim2.new(1, -52, 0, 0)
     ignoreBtn.BackgroundColor3 = Color3.fromRGB(60, 20, 20)
     ignoreBtn.BorderSizePixel = 0
-    ignoreBtn.Text = "ignorar"
+    ignoreBtn.Text = "Don't show again"
     ignoreBtn.TextColor3 = Color3.fromRGB(255, 120, 120)
     ignoreBtn.TextSize = 11
     ignoreBtn.Font = Enum.Font.Code
