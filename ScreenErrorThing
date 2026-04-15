@@ -1,25 +1,9 @@
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "ErrorSpy"
-ScreenGui.ResetOnSpawn = false
-ScreenGui.Parent = game:GetService("CoreGui")
-
-local Frame = Instance.new("Frame")
-Frame.Size = UDim2.new(0, 450, 0, 0)
-Frame.AutomaticSize = Enum.AutomaticSize.Y
-Frame.Position = UDim2.new(0, 10, 1, -10)
-Frame.AnchorPoint = Vector2.new(0, 1)
-Frame.BackgroundTransparency = 1
-Frame.Parent = ScreenGui
-
-local Layout = Instance.new("UIListLayout", Frame)
-Layout.Padding = UDim.new(0, 4)
-Layout.SortOrder = Enum.SortOrder.LayoutOrder
-Layout.VerticalAlignment = Enum.VerticalAlignment.Bottom
-Layout.FillDirection = Enum.FillDirection.Vertical
-
-local order = 0
+local ignored = {}
 
 local function showLog(msg, color)
+    local baseMsg = tostring(msg):match("^[^\n]+") or tostring(msg) -- só 1a linha como chave
+    if ignored[baseMsg] then return end
+
     order = order + 1
     local myOrder = order
 
@@ -39,7 +23,7 @@ local function showLog(msg, color)
     pad.PaddingBottom = UDim.new(0, 4)
 
     local label = Instance.new("TextLabel", bg)
-    label.Size = UDim2.new(1, 0, 0, 0)
+    label.Size = UDim2.new(1, -60, 0, 0)
     label.AutomaticSize = Enum.AutomaticSize.Y
     label.BackgroundTransparency = 1
     label.TextColor3 = color
@@ -49,18 +33,30 @@ local function showLog(msg, color)
     label.TextWrapped = true
     label.Text = tostring(msg)
 
+    local ignoreBtn = Instance.new("TextButton", bg)
+    ignoreBtn.Size = UDim2.new(0, 52, 0, 18)
+    ignoreBtn.Position = UDim2.new(1, -52, 0, 0)
+    ignoreBtn.BackgroundColor3 = Color3.fromRGB(60, 20, 20)
+    ignoreBtn.BorderSizePixel = 0
+    ignoreBtn.Text = "ignorar"
+    ignoreBtn.TextColor3 = Color3.fromRGB(255, 120, 120)
+    ignoreBtn.TextSize = 11
+    ignoreBtn.Font = Enum.Font.Code
+    Instance.new("UICorner", ignoreBtn).CornerRadius = UDim.new(0, 4)
+
+    ignoreBtn.MouseButton1Click:Connect(function()
+        ignored[baseMsg] = true
+        for _, child in ipairs(Frame:GetChildren()) do
+            if child:IsA("Frame") then
+                local lbl = child:FindFirstChildOfClass("TextLabel")
+                if lbl and (lbl.Text:match("^[^\n]+") or lbl.Text) == ("✖ " .. baseMsg) then
+                    child:Destroy()
+                end
+            end
+        end
+    end)
+
     task.delay(3, function()
         if bg and bg.Parent then bg:Destroy() end
     end)
 end
-
-game:GetService("ScriptContext").Error:Connect(function(msg, trace, script)
-    if script == nil then return end
-    if script:IsDescendantOf(game) then return end
-
-    local text = tostring(msg)
-    if trace and trace ~= "" then
-        text = text .. "\n" .. tostring(trace)
-    end
-    showLog("✖ " .. text, Color3.fromRGB(255, 80, 80))
-end)
