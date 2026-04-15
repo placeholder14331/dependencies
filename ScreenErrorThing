@@ -55,6 +55,9 @@ local function showLog(msg, color)
 end
 
 game:GetService("ScriptContext").Error:Connect(function(msg, trace, script)
+    if script == nil then return end
+    if script:IsDescendantOf(game) then return end
+
     local text = tostring(msg)
     if trace and trace ~= "" then
         text = text .. "\n" .. tostring(trace)
