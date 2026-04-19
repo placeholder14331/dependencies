@@ -20,9 +20,69 @@ Layout.FillDirection = Enum.FillDirection.Vertical
 local order = 0
 local ignored = {}
 
+local spamTracker = {}
+local SPAM_WINDOW = 2
+local MAX_PER_WINDOW = 3
+local MAX_VISIBLE = 20
+
+local function getVisibleCount()
+    local n = 0
+    for _, child in ipairs(Frame:GetChildren()) do
+        if child:IsA("Frame") then n = n + 1 end
+    end
+    return n
+end
+
 local function showLog(msg, color)
     local baseMsg = tostring(msg):match("^[^\n]+") or tostring(msg)
     if ignored[baseMsg] then return end
+
+    local now = tick()
+    local tracker = spamTracker[baseMsg]
+
+    if tracker and (now - tracker.lastTime) < SPAM_WINDOW then
+        tracker.count = tracker.count + 1
+        tracker.lastTime = now
+
+        if tracker.count > MAX_PER_WINDOW then
+            if tracker.bgRef and tracker.bgRef.Parent then
+                if tracker.countLabel and tracker.countLabel.Parent then
+                    tracker.countLabel.Text = "🔁 x" .. tracker.count
+                end
+                if tracker.destroyTask then
+                    task.cancel(tracker.destroyTask)
+                end
+                tracker.destroyTask = task.delay(3, function()
+                    if tracker.bgRef and tracker.bgRef.Parent then
+                        tracker.bgRef:Destroy()
+                    end
+                    spamTracker[baseMsg] = nil
+                end)
+            end
+            return
+        end
+    else
+        spamTracker[baseMsg] = {
+            count = 1,
+            lastTime = now,
+            bgRef = nil,
+            countLabel = nil,
+            destroyTask = nil,
+        }
+        tracker = spamTracker[baseMsg]
+    end
+
+    if getVisibleCount() >= MAX_VISIBLE then
+        local oldest = nil
+        for _, child in ipairs(Frame:GetChildren()) do
+            if child:IsA("Frame") then
+                if not oldest or child.LayoutOrder < oldest.LayoutOrder then
+                    oldest = child
+                end
+            end
+        end
+        if oldest then oldest:Destroy() end
+    end
 
     order = order + 1
     local myOrder = order
@@ -42,15 +102,25 @@ local function showLog(msg, color)
     pad.PaddingTop = UDim.new(0, 4)
     pad.PaddingBottom = UDim.new(0, 4)
 
-    -- layout interno vertical
     local innerLayout = Instance.new("UIListLayout", bg)
     innerLayout.Padding = UDim.new(0, 4)
     innerLayout.SortOrder = Enum.SortOrder.LayoutOrder
     innerLayout.FillDirection = Enum.FillDirection.Vertical
 
-    local label = Instance.new("TextLabel", bg)
+    local topRow = Instance.new("Frame", bg)
+    topRow.LayoutOrder = 1
+    topRow.Size = UDim2.new(1, 0, 0, 0)
+    topRow.AutomaticSize = Enum.AutomaticSize.Y
+    topRow.BackgroundTransparency = 1
+
+    local topLayout = Instance.new("UIListLayout", topRow)
+    topLayout.FillDirection = Enum.FillDirection.Horizontal
+    topLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    topLayout.Padding = UDim.new(0, 6)
+
+    local label = Instance.new("TextLabel", topRow)
     label.LayoutOrder = 1
-    label.Size = UDim2.new(1, 0, 0, 0)
+    label.Size = UDim2.new(1, -60, 0, 0)
     label.AutomaticSize = Enum.AutomaticSize.Y
     label.BackgroundTransparency = 1
     label.TextColor3 = color
@@ -59,6 +129,22 @@ local function showLog(msg, color)
     label.TextXAlignment = Enum.TextXAlignment.Left
     label.TextWrapped = true
     label.Text = tostring(msg)
+
+
+    local countLabel = Instance.new("TextLabel", topRow)
+    countLabel.LayoutOrder = 2
+    countLabel.Size = UDim2.new(0, 52, 0, 18)
+    countLabel.BackgroundColor3 = Color3.fromRGB(40, 40, 80)
+    countLabel.BackgroundTransparency = 0.2
+    countLabel.TextColor3 = Color3.fromRGB(180, 180, 255)
+    countLabel.TextSize = 11
+    countLabel.Font = Enum.Font.Code
+    countLabel.Text = ""
+    countLabel.Visible = false
+    Instance.new("UICorner", countLabel).CornerRadius = UDim.new(0, 4)
+
+    tracker.bgRef = bg
+    tracker.countLabel = countLabel
 
     local ignoreBtn = Instance.new("TextButton", bg)
     ignoreBtn.LayoutOrder = 2
@@ -73,18 +159,30 @@ local function showLog(msg, color)
 
     ignoreBtn.MouseButton1Click:Connect(function()
         ignored[baseMsg] = true
+        spamTracker[baseMsg] = nil
         for _, child in ipairs(Frame:GetChildren()) do
             if child:IsA("Frame") then
                 local lbl = child:FindFirstChildOfClass("TextLabel")
-                if lbl and (lbl.Text:match("^[^\n]+") or lbl.Text) == ("✖ " .. baseMsg) then
+                if lbl and (lbl.Text:match("^[^\n]+") or lbl.Text) == ("❌ " .. baseMsg) then
                     child:Destroy()
                 end
             end
         end
     end)
 
-    task.delay(3, function()
+    tracker.destroyTask = task.delay(3, function()
         if bg and bg.Parent then bg:Destroy() end
+        spamTracker[baseMsg] = nil
+    end)
+
+    task.spawn(function()
+        while tracker and tracker.bgRef == bg do
+            task.wait(0.1)
+            if tracker.count > MAX_PER_WINDOW then
+                countLabel.Visible = true
+                countLabel.Text = "🔁 x" .. tracker.count
+            end
+        end
     end)
 end
 
@@ -93,5 +191,5 @@ game:GetService("ScriptContext").Error:Connect(function(msg, trace, script)
     if trace and trace ~= "" then
         text = text .. "\n" .. tostring(trace)
     end
-    showLog("✖ " .. text, Color3.fromRGB(255, 80, 80))
+    showLog("❌ " .. text, Color3.fromRGB(255, 80, 80))
 end)
