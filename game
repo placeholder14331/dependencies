@@ -1,13 +1,12 @@
 local function returncurrentgame(pid)
-    local dwpids = {
+    local placeids = {
         [13438553315]     = "Decaying Winter",
         [114931763326993] = "Legacy",
+        [18259975825]     = "Grave Digger",
     }
-
-    if dwpids[pid] then
-        return dwpids[pid]
+    if placeids[pid] then
+        return placeids[pid]
     end
-
     return nil
 end
 
