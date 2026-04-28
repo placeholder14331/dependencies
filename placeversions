@@ -1,13 +1,13 @@
-local placevers = {
-    [13438553315] = {
-        Name = "Decaying Winter",
-        PlaceVersion = 2897,
-    },
+local function returncurrentgame(pid)
+    local placeids = {
+        [13438553315]     = "Decaying Winter",
+        [114931763326993] = "Legacy",
+        [18259975825]     = "Grave Digger",
+    }
+    if placeids[pid] then
+        return placeids[pid]
+    end
+    return nil
+end
 
-    [114931763326993] = {
-        Name = "Decaying Winter Legacy",
-        PlaceVersion = 36,
-    },
-}
-
-return placevers
+return returncurrentgame
