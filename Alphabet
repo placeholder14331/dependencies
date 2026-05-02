@@ -1,0 +1,111 @@
+return {
+        -- Letters
+    A=function(p,ox) drawLine(p(ox+0,0),p(ox+0.5,2)) drawLine(p(ox+0.5,2),p(ox+1,0)) drawLine(p(ox+0.2,1),p(ox+0.8,1)) end,
+    B=function(p,ox) drawLine(p(ox+0,0),p(ox+0,2)) drawLine(p(ox+0,2),p(ox+0.8,2)) drawLine(p(ox+0.8,2),p(ox+0.8,1)) drawLine(p(ox+0.8,1),p(ox+0,1)) drawLine(p(ox+0,1),p(ox+1,1)) drawLine(p(ox+1,1),p(ox+1,0)) drawLine(p(ox+1,0),p(ox+0,0)) end,
+    C=function(p,ox) drawLine(p(ox+1,0),p(ox+0,0)) drawLine(p(ox+0,0),p(ox+0,2)) drawLine(p(ox+0,2),p(ox+1,2)) end,
+    D=function(p,ox) drawLine(p(ox+0,0),p(ox+0,2)) drawLine(p(ox+0,2),p(ox+0.7,2)) drawLine(p(ox+0.7,2),p(ox+1,1.5)) drawLine(p(ox+1,1.5),p(ox+1,0.5)) drawLine(p(ox+1,0.5),p(ox+0.7,0)) drawLine(p(ox+0.7,0),p(ox+0,0)) end,
+    E=function(p,ox) drawLine(p(ox+0,0),p(ox+0,2)) drawLine(p(ox+0,0),p(ox+1,0)) drawLine(p(ox+0,1),p(ox+0.8,1)) drawLine(p(ox+0,2),p(ox+1,2)) end,
+    F=function(p,ox) drawLine(p(ox+0,0),p(ox+0,2)) drawLine(p(ox+0,2),p(ox+1,2)) drawLine(p(ox+0,1),p(ox+0.8,1)) end,
+    G=function(p,ox) drawLine(p(ox+1,2),p(ox+0,2)) drawLine(p(ox+0,2),p(ox+0,0)) drawLine(p(ox+0,0),p(ox+1,0)) drawLine(p(ox+1,0),p(ox+1,1)) drawLine(p(ox+1,1),p(ox+0.5,1)) end,
+    H=function(p,ox) drawLine(p(ox+0,0),p(ox+0,2)) drawLine(p(ox+1,0),p(ox+1,2)) drawLine(p(ox+0,1),p(ox+1,1)) end,
+    I=function(p,ox) drawLine(p(ox+0,0),p(ox+1,0)) drawLine(p(ox+0.5,0),p(ox+0.5,2)) drawLine(p(ox+0,2),p(ox+1,2)) end,
+    J=function(p,ox) drawLine(p(ox+0,0),p(ox+1,0)) drawLine(p(ox+1,0),p(ox+1,2)) drawLine(p(ox+0.5,2),p(ox+1,2)) end,
+    K=function(p,ox) drawLine(p(ox+0,0),p(ox+0,2)) drawLine(p(ox+0,1),p(ox+1,2)) drawLine(p(ox+0,1),p(ox+1,0)) end,
+    L=function(p,ox) drawLine(p(ox+0,2),p(ox+0,0)) drawLine(p(ox+0,0),p(ox+1,0)) end,
+    M=function(p,ox) drawLine(p(ox+0,0),p(ox+0,2)) drawLine(p(ox+0,2),p(ox+0.5,1)) drawLine(p(ox+0.5,1),p(ox+1,2)) drawLine(p(ox+1,2),p(ox+1,0)) end,
+    N=function(p,ox) drawLine(p(ox+0,0),p(ox+0,2)) drawLine(p(ox+0,2),p(ox+1,0)) drawLine(p(ox+1,0),p(ox+1,2)) end,
+    O=function(p,ox) drawLine(p(ox+0,0),p(ox+0,2)) drawLine(p(ox+0,2),p(ox+1,2)) drawLine(p(ox+1,2),p(ox+1,0)) drawLine(p(ox+1,0),p(ox+0,0)) end,
+    P=function(p,ox) drawLine(p(ox+0,0),p(ox+0,2)) drawLine(p(ox+0,2),p(ox+0.8,2)) drawLine(p(ox+0.8,2),p(ox+0.8,1)) drawLine(p(ox+0.8,1),p(ox+0,1)) end,
+    Q=function(p,ox) drawLine(p(ox+0,0),p(ox+0,2)) drawLine(p(ox+0,2),p(ox+1,2)) drawLine(p(ox+1,2),p(ox+1,0)) drawLine(p(ox+1,0),p(ox+0,0)) drawLine(p(ox+0.5,0.5),p(ox+1,0)) end,
+    R=function(p,ox) drawLine(p(ox+0,0),p(ox+0,2)) drawLine(p(ox+0,2),p(ox+0.8,2)) drawLine(p(ox+0.8,2),p(ox+0.8,1)) drawLine(p(ox+0.8,1),p(ox+0,1)) drawLine(p(ox+0,1),p(ox+0.8,0)) end,
+    S=function(p,ox) drawLine(p(ox+0,0),p(ox+1,0)) drawLine(p(ox+1,0),p(ox+1,1)) drawLine(p(ox+1,1),p(ox+0,1)) drawLine(p(ox+0,1),p(ox+0,2)) drawLine(p(ox+0,2),p(ox+1,2)) end,
+    T=function(p,ox) drawLine(p(ox+0,2),p(ox+1,2)) drawLine(p(ox+0.5,2),p(ox+0.5,0)) end,
+    U=function(p,ox) drawLine(p(ox+0,2),p(ox+0,0)) drawLine(p(ox+0,0),p(ox+1,0)) drawLine(p(ox+1,0),p(ox+1,2)) end,
+    V=function(p,ox) drawLine(p(ox+0,2),p(ox+0.5,0)) drawLine(p(ox+0.5,0),p(ox+1,2)) end,
+    W=function(p,ox) drawLine(p(ox+0,2),p(ox+0.25,0)) drawLine(p(ox+0.25,0),p(ox+0.5,1)) drawLine(p(ox+0.5,1),p(ox+0.75,0)) drawLine(p(ox+0.75,0),p(ox+1,2)) end,
+    X=function(p,ox) drawLine(p(ox+0,0),p(ox+1,2)) drawLine(p(ox+1,0),p(ox+0,2)) end,
+    Y=function(p,ox) drawLine(p(ox+0,2),p(ox+0.5,1)) drawLine(p(ox+1,2),p(ox+0.5,1)) drawLine(p(ox+0.5,1),p(ox+0.5,0)) end,
+    Z=function(p,ox) drawLine(p(ox+0,2),p(ox+1,2)) drawLine(p(ox+1,2),p(ox+0,0)) drawLine(p(ox+0,0),p(ox+1,0)) end,
+    -- Lowercase letters
+    a=function(p,ox) drawLine(p(ox+0,0.6),p(ox+1,0.6)) drawLine(p(ox+1,0.6),p(ox+1,0)) drawLine(p(ox+1,0),p(ox+0,0)) drawLine(p(ox+0,0),p(ox+0,0.4)) end,
+    b=function(p,ox) drawLine(p(ox+0,0),p(ox+0,2)) drawLine(p(ox+0,0),p(ox+0.8,0)) drawLine(p(ox+0.8,0),p(ox+0.8,0.6)) drawLine(p(ox+0.8,0.6),p(ox+0,0.6)) end,
+    c=function(p,ox) drawLine(p(ox+1,0.6),p(ox+0,0.6)) drawLine(p(ox+0,0.6),p(ox+0,0)) drawLine(p(ox+0,0),p(ox+1,0)) end,
+    d=function(p,ox) drawLine(p(ox+1,0),p(ox+1,2)) drawLine(p(ox+1,0),p(ox+0.2,0)) drawLine(p(ox+0.2,0),p(ox+0,0.3)) drawLine(p(ox+0,0.3),p(ox+0,0.6)) drawLine(p(ox+0,0.6),p(ox+1,0.6)) end,
+    e=function(p,ox) drawLine(p(ox+0,0.3),p(ox+0,0.6)) drawLine(p(ox+0,0.6),p(ox+1,0.6)) drawLine(p(ox+1,0.6),p(ox+1,0.3)) drawLine(p(ox+1,0.3),p(ox+0,0.3)) drawLine(p(ox+0,0.3),p(ox+0,0)) drawLine(p(ox+0,0),p(ox+1,0)) end,
+    f=function(p,ox) drawLine(p(ox+0.5,0),p(ox+0.5,2)) drawLine(p(ox+0.5,2),p(ox+1,2)) drawLine(p(ox+0.2,1),p(ox+0.8,1)) end,
+    g=function(p,ox) drawLine(p(ox+1,0.6),p(ox+0,0.6)) drawLine(p(ox+0,0.6),p(ox+0,0)) drawLine(p(ox+0,0),p(ox+1,0)) drawLine(p(ox+1,0),p(ox+1,0.6)) drawLine(p(ox+1,0),p(ox+1,-0.4)) drawLine(p(ox+1,-0.4),p(ox+0,-0.4)) end,
+    h=function(p,ox) drawLine(p(ox+0,0),p(ox+0,2)) drawLine(p(ox+0,0.6),p(ox+0.8,0.6)) drawLine(p(ox+0.8,0.6),p(ox+0.8,0)) end,
+    i=function(p,ox) drawLine(p(ox+0.5,0),p(ox+0.5,0.6)) drawLine(p(ox+0.5,0.9),p(ox+0.5,1)) end,
+    j=function(p,ox) drawLine(p(ox+0.5,0.9),p(ox+0.5,0.9)) drawLine(p(ox+0.5,0.6),p(ox+0.5,-0.3)) drawLine(p(ox+0.5,-0.3),p(ox+0,-0.3)) end,
+    k=function(p,ox) drawLine(p(ox+0,0),p(ox+0,2)) drawLine(p(ox+0,0.4),p(ox+0.8,0.6)) drawLine(p(ox+0,0.4),p(ox+0.8,0)) end,
+    l=function(p,ox) drawLine(p(ox+0.4,2),p(ox+0.4,0)) drawLine(p(ox+0.4,0),p(ox+0.7,0)) end,
+    m=function(p,ox) drawLine(p(ox+0,0),p(ox+0,0.6)) drawLine(p(ox+0,0.6),p(ox+0.5,0.6)) drawLine(p(ox+0.5,0.6),p(ox+0.5,0)) drawLine(p(ox+0.5,0.6),p(ox+1,0.6)) drawLine(p(ox+1,0.6),p(ox+1,0)) end,
+    n=function(p,ox) drawLine(p(ox+0,0),p(ox+0,0.6)) drawLine(p(ox+0,0.6),p(ox+0.8,0.6)) drawLine(p(ox+0.8,0.6),p(ox+0.8,0)) end,
+    o=function(p,ox) drawLine(p(ox+0,0),p(ox+0,0.6)) drawLine(p(ox+0,0.6),p(ox+1,0.6)) drawLine(p(ox+1,0.6),p(ox+1,0)) drawLine(p(ox+1,0),p(ox+0,0)) end,
+    p=function(p,ox) drawLine(p(ox+0,-0.4),p(ox+0,0.6)) drawLine(p(ox+0,0.6),p(ox+0.8,0.6)) drawLine(p(ox+0.8,0.6),p(ox+0.8,0)) drawLine(p(ox+0.8,0),p(ox+0,0)) end,
+    q=function(p,ox) drawLine(p(ox+1,-0.4),p(ox+1,0.6)) drawLine(p(ox+1,0.6),p(ox+0.2,0.6)) drawLine(p(ox+0.2,0.6),p(ox+0,0.3)) drawLine(p(ox+0,0.3),p(ox+0,0)) drawLine(p(ox+0,0),p(ox+1,0)) end,
+    r=function(p,ox) drawLine(p(ox+0,0),p(ox+0,0.6)) drawLine(p(ox+0,0.6),p(ox+0.6,0.6)) drawLine(p(ox+0.6,0.6),p(ox+0.8,0.4)) end,
+    s=function(p,ox) drawLine(p(ox+0,0),p(ox+0.8,0)) drawLine(p(ox+0.8,0),p(ox+0.8,0.3)) drawLine(p(ox+0.8,0.3),p(ox+0,0.3)) drawLine(p(ox+0,0.3),p(ox+0,0.6)) drawLine(p(ox+0,0.6),p(ox+0.8,0.6)) end,
+    t=function(p,ox) drawLine(p(ox+0.5,2),p(ox+0.5,0)) drawLine(p(ox+0.5,0),p(ox+0.8,0)) drawLine(p(ox+0.2,1),p(ox+0.8,1)) end,
+    u=function(p,ox) drawLine(p(ox+0,0.6),p(ox+0,0)) drawLine(p(ox+0,0),p(ox+1,0)) drawLine(p(ox+1,0),p(ox+1,0.6)) end,
+    v=function(p,ox) drawLine(p(ox+0,0.6),p(ox+0.5,0)) drawLine(p(ox+0.5,0),p(ox+1,0.6)) end,
+    w=function(p,ox) drawLine(p(ox+0,0.6),p(ox+0.25,0)) drawLine(p(ox+0.25,0),p(ox+0.5,0.4)) drawLine(p(ox+0.5,0.4),p(ox+0.75,0)) drawLine(p(ox+0.75,0),p(ox+1,0.6)) end,
+    x=function(p,ox) drawLine(p(ox+0,0),p(ox+1,0.6)) drawLine(p(ox+1,0),p(ox+0,0.6)) end,
+    y=function(p,ox) drawLine(p(ox+0,0.6),p(ox+0.5,0.3)) drawLine(p(ox+1,0.6),p(ox+0.5,0.3)) drawLine(p(ox+0.5,0.3),p(ox+0.5,-0.4)) end,
+    z=function(p,ox) drawLine(p(ox+0,0.6),p(ox+1,0.6)) drawLine(p(ox+1,0.6),p(ox+0,0)) drawLine(p(ox+0,0),p(ox+1,0)) end,
+
+    -- Numbers
+    ["0"]=function(p,ox) drawLine(p(ox+0,0),p(ox+0,2)) drawLine(p(ox+0,2),p(ox+1,2)) drawLine(p(ox+1,2),p(ox+1,0)) drawLine(p(ox+1,0),p(ox+0,0)) drawLine(p(ox+0,0),p(ox+1,2)) end,
+    ["1"]=function(p,ox) drawLine(p(ox+0.3,1.5),p(ox+0.5,2)) drawLine(p(ox+0.5,2),p(ox+0.5,0)) drawLine(p(ox+0.2,0),p(ox+0.8,0)) end,
+    ["2"]=function(p,ox) drawLine(p(ox+0,2),p(ox+1,2)) drawLine(p(ox+1,2),p(ox+1,1)) drawLine(p(ox+1,1),p(ox+0,1)) drawLine(p(ox+0,1),p(ox+0,0)) drawLine(p(ox+0,0),p(ox+1,0)) end,
+    ["3"]=function(p,ox) drawLine(p(ox+0,2),p(ox+1,2)) drawLine(p(ox+1,2),p(ox+1,0)) drawLine(p(ox+1,0),p(ox+0,0)) drawLine(p(ox+0.2,1),p(ox+1,1)) end,
+    ["4"]=function(p,ox) drawLine(p(ox+0,2),p(ox+0,1)) drawLine(p(ox+0,1),p(ox+1,1)) drawLine(p(ox+1,2),p(ox+1,0)) end,
+    ["5"]=function(p,ox) drawLine(p(ox+1,2),p(ox+0,2)) drawLine(p(ox+0,2),p(ox+0,1)) drawLine(p(ox+0,1),p(ox+1,1)) drawLine(p(ox+1,1),p(ox+1,0)) drawLine(p(ox+1,0),p(ox+0,0)) end,
+    ["6"]=function(p,ox) drawLine(p(ox+1,2),p(ox+0,2)) drawLine(p(ox+0,2),p(ox+0,0)) drawLine(p(ox+0,0),p(ox+1,0)) drawLine(p(ox+1,0),p(ox+1,1)) drawLine(p(ox+1,1),p(ox+0,1)) end,
+    ["7"]=function(p,ox) drawLine(p(ox+0,2),p(ox+1,2)) drawLine(p(ox+1,2),p(ox+0.3,0)) end,
+    ["8"]=function(p,ox) drawLine(p(ox+0,0),p(ox+0,2)) drawLine(p(ox+0,2),p(ox+1,2)) drawLine(p(ox+1,2),p(ox+1,0)) drawLine(p(ox+1,0),p(ox+0,0)) drawLine(p(ox+0,1),p(ox+1,1)) end,
+    ["9"]=function(p,ox) drawLine(p(ox+0,1),p(ox+0,2)) drawLine(p(ox+0,2),p(ox+1,2)) drawLine(p(ox+1,2),p(ox+1,0)) drawLine(p(ox+1,0),p(ox+0,0)) drawLine(p(ox+0,1),p(ox+1,1)) end,
+
+    -- Symbols
+    ["/"]=function(p,ox) drawLine(p(ox+0,0),p(ox+1,2)) end,
+    ["."]=function(p,ox) drawLine(p(ox+0.4,0),p(ox+0.6,0)) end,
+    [","]=function(p,ox) drawLine(p(ox+0.4,0),p(ox+0.3,-0.3)) end,
+    [":"]=function(p,ox) drawLine(p(ox+0.4,0.3),p(ox+0.6,0.3)) drawLine(p(ox+0.4,1.2),p(ox+0.6,1.2)) end,
+    ["("]=function(p,ox) drawLine(p(ox+0.8,2),p(ox+0.3,1.5)) drawLine(p(ox+0.3,1.5),p(ox+0.3,0.5)) drawLine(p(ox+0.3,0.5),p(ox+0.8,0)) end,
+    [")"]=function(p,ox) drawLine(p(ox+0.2,2),p(ox+0.7,1.5)) drawLine(p(ox+0.7,1.5),p(ox+0.7,0.5)) drawLine(p(ox+0.7,0.5),p(ox+0.2,0)) end,
+    ['"']=function(p,ox) drawLine(p(ox+0.2,2),p(ox+0.2,1.5)) drawLine(p(ox+0.6,2),p(ox+0.6,1.5)) end,
+    ["*"]=function(p,ox)
+        drawLine(p(ox+0.5,2.0),p(ox+0.0,1.0)) drawLine(p(ox+0.0,1.0),p(ox+1.0,1.0)) drawLine(p(ox+1.0,1.0),p(ox+0.5,2.0))
+        drawLine(p(ox+0.5,0.0),p(ox+0.0,1.0)) drawLine(p(ox+0.0,1.0),p(ox+1.0,1.0)) drawLine(p(ox+1.0,1.0),p(ox+0.5,0.0))
+    end,
+
+    -- new symbols
+    ["!"]=function(p,ox) drawLine(p(ox+0.5,2),p(ox+0.5,0.6)) drawLine(p(ox+0.5,0.2),p(ox+0.5,0)) end,
+    [">"]=function(p,ox) drawLine(p(ox+0,2),p(ox+1,1)) drawLine(p(ox+1,1),p(ox+0,0)) end,
+    ["<"]=function(p,ox) drawLine(p(ox+1,2),p(ox+0,1)) drawLine(p(ox+0,1),p(ox+1,0)) end,
+    ["?"]=function(p,ox) drawLine(p(ox+0,2),p(ox+1,2)) drawLine(p(ox+1,2),p(ox+1,1)) drawLine(p(ox+1,1),p(ox+0.5,1)) drawLine(p(ox+0.5,1),p(ox+0.5,0.6)) drawLine(p(ox+0.5,0.2),p(ox+0.5,0)) end,
+    ["-"]=function(p,ox) drawLine(p(ox+0,1),p(ox+1,1)) end,
+    ["_"]=function(p,ox) drawLine(p(ox+0,0),p(ox+1,0)) end,
+    ["="]=function(p,ox) drawLine(p(ox+0,0.6),p(ox+1,0.6)) drawLine(p(ox+0,1.4),p(ox+1,1.4)) end,
+    ["+"]=function(p,ox) drawLine(p(ox+0,1),p(ox+1,1)) drawLine(p(ox+0.5,0.4),p(ox+0.5,1.6)) end,
+    ["~"]=function(p,ox) drawLine(p(ox+0,1),p(ox+0.25,1.3)) drawLine(p(ox+0.25,1.3),p(ox+0.75,0.7)) drawLine(p(ox+0.75,0.7),p(ox+1,1)) end,
+    ["#"]=function(p,ox)
+        drawLine(p(ox+0.3,0),p(ox+0.3,2)) drawLine(p(ox+0.7,0),p(ox+0.7,2))
+        drawLine(p(ox+0,0.7),p(ox+1,0.7)) drawLine(p(ox+0,1.3),p(ox+1,1.3))
+    end,
+    ["$"]=function(p,ox)
+        drawLine(p(ox+0,0.2),p(ox+1,0.2)) drawLine(p(ox+1,0.2),p(ox+1,1)) drawLine(p(ox+1,1),p(ox+0,1)) drawLine(p(ox+0,1),p(ox+0,1.8)) drawLine(p(ox+0,1.8),p(ox+1,1.8))
+        drawLine(p(ox+0.5,2.2),p(ox+0.5,-0.2))
+    end,
+    ["%"]=function(p,ox)
+        drawLine(p(ox+0,2),p(ox+0.15,2)) drawLine(p(ox+0.15,2),p(ox+0.15,1.7)) drawLine(p(ox+0.15,1.7),p(ox+0,1.7)) drawLine(p(ox+0,1.7),p(ox+0,2))
+        drawLine(p(ox+1,0.3),p(ox+0.85,0.3)) drawLine(p(ox+0.85,0.3),p(ox+0.85,0)) drawLine(p(ox+0.85,0),p(ox+1,0)) drawLine(p(ox+1,0),p(ox+1,0.3))
+        drawLine(p(ox+0,0),p(ox+1,2))
+    end,
+    ["'"]=function(p,ox) drawLine(p(ox+0.5,2),p(ox+0.5,1.5)) end,
+    ['"']=function(p,ox) drawLine(p(ox+0.2,2),p(ox+0.2,1.5)) drawLine(p(ox+0.6,2),p(ox+0.6,1.5)) end,
+
+    [" "]=function()
+    -- Space does nothing
+ end,
+}
