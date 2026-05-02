@@ -1,3 +1,4 @@
+        return function(drawLine)
 return {
         -- Letters
     A=function(p,ox) drawLine(p(ox+0,0),p(ox+0.5,2)) drawLine(p(ox+0.5,2),p(ox+1,0)) drawLine(p(ox+0.2,1),p(ox+0.8,1)) end,
