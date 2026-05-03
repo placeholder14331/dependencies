@@ -1,4 +1,4 @@
-return = {
+return {
     -- Buffs
     { key = "Damage Buff",        name = "3-(cbSTM)",           dur = 60,   icon = "2313562669", intensity = 1, ints = {35},          colour = Color3.fromRGB(0, 150, 230),    isBuff = true  },
     { key = "Bottle Buff",        name = "Dan janiel",         dur = 30,   icon = "9542126651", intensity = 1, ints = {},            colour = Color3.fromRGB(255, 255, 51),   isBuff = true  },
