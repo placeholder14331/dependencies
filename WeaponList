@@ -67,13 +67,13 @@ return {
 ["Val"] = "ASVal";
 ["LMG2"] = "LMG";
 ["LumiFumo"] = "LumiFumoMelee";
-["RedAKM"] = "REDCODEAKM";
+-- ["RedAKM"] = "REDCODEAKM";
 ["RRifle"] = "Rebuilt Rfile";
-["RedCodeSword"] = "RedCodeSword";
+-- ["RedCodeSword"] = "RedCodeSword";
 ["OldSKS"] = "SKSold";
 ["ScarLSkin"] = "ScarLSkin";
 ["SabreOld"] = "Sabreolddelete";
-["ScrapScythe"] = "ScrapScythe";
+--["ScrapScythe"] = "ScrapScythe";
 ["ServoGun"] = "ServoGun";
 ["Snowball"] = "Snowball";
 ["Tanto"] = "Tanto";
