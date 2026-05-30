@@ -3,11 +3,11 @@ local function returncurrentgame(pid)
         [13438553315]     = "Decaying Winter",
         [114931763326993] = "Legacy",
         [18259975825]     = "Grave Digger",
+        [115209351507608] = "The Armory",
     }
     if placeids[pid] then
         return placeids[pid]
     end
     return nil
 end
-
 return returncurrentgame
