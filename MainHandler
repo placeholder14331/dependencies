@@ -1,4 +1,3 @@
-local MainHandler = {
 local l_Debris_0 = game:GetService("Debris");
 local l_Players_0 = game:GetService("Players");
 local l_ReplicatedFirst_0 = game:GetService("ReplicatedFirst");
@@ -18044,5 +18043,3 @@ return function()
     end);
     l_ReplicatedStorage_0:WaitForChild("onClientLoad"):FireServer(tick());
 end;}
-
-return MainHandler
