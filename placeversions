@@ -15,5 +15,9 @@ local placevers = {
         Name = "The Armory",
         PlaceVersion = 6789,
     },
+    [155615604] = {
+        Name = "Prison Life",
+        PlaceVersion = 420,
+    },
 }
 return placevers
