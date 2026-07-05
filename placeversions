@@ -1,7 +1,7 @@
 local placevers = {
     [13438553315] = {
         Name = "Decaying Winter",
-        PlaceVersion = 3055,
+        PlaceVersion = 3064,
     },
     [18259975825] = {
         Name = "Grave/Digger",
