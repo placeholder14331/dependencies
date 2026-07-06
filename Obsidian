@@ -238,7 +238,7 @@ local Library = {
     ShowToggleFrameInKeybinds = true,
 
     NotifyOnError = false,
-    ShowCustomCursor = true,
+    ShowCustomCursor = false,
     ForceCheckbox = false,
 
     CantDragForced = false,
