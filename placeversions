@@ -9,7 +9,7 @@ local placevers = {
     },
     [114931763326993] = {
         Name = "Decaying Winter Legacy",
-        PlaceVersion = 67,
+        PlaceVersion = 68,
     },
     [115209351507608] = {
         Name = "The Armory",
