@@ -1,0 +1,418 @@
+local FroLib = getgenv().FroLib
+if not FroLib then return end
+
+FroLib.createChatWindow = function()
+            local Players = game:GetService("Players")
+            local UserInputService = game:GetService("UserInputService")
+            local CoreGui = game:GetService("CoreGui")
+
+            local localPlayer = Players.LocalPlayer
+            local targetGui = pcall(function() return CoreGui.Name end) and CoreGui or localPlayer:WaitForChild("PlayerGui")
+            if gethui then targetGui = gethui() end
+
+            FroLib.LuauChatSystem = Instance.new("ScreenGui")
+            FroLib.LuauChatSystem.Name = "LuauChatSystem"
+            FroLib.LuauChatSystem.ResetOnSpawn = false
+            FroLib.LuauChatSystem.DisplayOrder = 99999
+            FroLib.LuauChatSystem.Parent = targetGui
+
+            local chatWindow = Instance.new("Frame")
+            chatWindow.Name = "ChatWindow"
+            chatWindow.Size = UDim2.new(0, 520, 0, 320)
+            chatWindow.Position = UDim2.new(0.5, -260, 0.5, -160)
+            chatWindow.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+            chatWindow.BackgroundTransparency = 0.1
+            chatWindow.BorderSizePixel = 0
+            chatWindow.Active = true
+            chatWindow.Parent = FroLib.LuauChatSystem
+
+            local windowStroke = Instance.new("UIStroke")
+            windowStroke.Color = Color3.fromRGB(60, 60, 75)
+            windowStroke.Thickness = 1
+            windowStroke.Parent = chatWindow
+
+            local uiCorner = Instance.new("UICorner")
+            uiCorner.CornerRadius = UDim.new(0, 10)
+            uiCorner.Parent = chatWindow
+
+            local titleBar = Instance.new("Frame")
+            titleBar.Name = "TitleBar"
+            titleBar.Size = UDim2.new(1, 0, 0, 40)
+            titleBar.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+            titleBar.BackgroundTransparency = 0.2
+            titleBar.BorderSizePixel = 0
+            titleBar.Parent = chatWindow
+
+            local titleCorner = Instance.new("UICorner")
+            titleCorner.CornerRadius = UDim.new(0, 10)
+            titleCorner.Parent = titleBar
+
+            local titleFix = Instance.new("Frame")
+            titleFix.Size = UDim2.new(1, 0, 0, 10)
+            titleFix.Position = UDim2.new(0, 0, 1, -10)
+            titleFix.BackgroundColor3 = titleBar.BackgroundColor3
+            titleFix.BackgroundTransparency = titleBar.BackgroundTransparency
+            titleFix.BorderSizePixel = 0
+            titleFix.Parent = titleBar
+            
+            local titleLine = Instance.new("Frame")
+            titleLine.Size = UDim2.new(1, 0, 0, 1)
+            titleLine.Position = UDim2.new(0, 0, 1, 0)
+            titleLine.BackgroundColor3 = Color3.fromRGB(60, 60, 75)
+            titleLine.BorderSizePixel = 0
+            titleLine.Parent = titleBar
+
+            local titleText = Instance.new("TextLabel")
+            titleText.Size = UDim2.new(1, -15, 1, 0)
+            titleText.Position = UDim2.new(0, 15, 0, 0)
+            titleText.BackgroundTransparency = 1
+            titleText.Text = "Global Chat"
+            titleText.TextColor3 = Color3.fromRGB(255, 255, 255)
+            titleText.TextXAlignment = Enum.TextXAlignment.Left
+            titleText.Font = Enum.Font.GothamBold
+            titleText.TextSize = 14
+            titleText.Parent = titleBar
+
+            local currentKeybind = Enum.KeyCode.RightAlt
+            local listening = false
+
+            local keybindFrame = Instance.new("TextButton")
+            keybindFrame.Size = UDim2.new(0, 100, 0, 24)
+            keybindFrame.Position = UDim2.new(1, -110, 0.5, -12)
+            keybindFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+            keybindFrame.BorderSizePixel = 0
+            keybindFrame.Text = "Key: RightAlt"
+            keybindFrame.TextColor3 = Color3.fromRGB(220, 220, 230)
+            keybindFrame.Font = Enum.Font.GothamMedium
+            keybindFrame.TextSize = 12
+            keybindFrame.AutoButtonColor = false
+            keybindFrame.ZIndex = 3
+            keybindFrame.Parent = titleBar
+
+            local keybindCorner = Instance.new("UICorner")
+            keybindCorner.CornerRadius = UDim.new(0, 6)
+            keybindCorner.Parent = keybindFrame
+            
+            local keybindStroke = Instance.new("UIStroke")
+            keybindStroke.Color = Color3.fromRGB(70, 70, 85)
+            keybindStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+            keybindStroke.Parent = keybindFrame
+
+            keybindFrame.MouseButton1Click:Connect(function()
+                listening = true
+                keybindFrame.Text = "..."
+                keybindFrame.TextColor3 = Color3.fromRGB(120, 170, 255)
+                keybindStroke.Color = Color3.fromRGB(120, 170, 255)
+            end)
+
+            local hideDisplay = false
+            local hideUser = false
+
+            local hideDisplayBtn = Instance.new("TextButton")
+            hideDisplayBtn.Size = UDim2.new(0, 90, 0, 24)
+            hideDisplayBtn.Position = UDim2.new(1, -210, 0.5, -12)
+            hideDisplayBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+            hideDisplayBtn.BorderSizePixel = 0
+            hideDisplayBtn.Text = "Hide Name"
+            hideDisplayBtn.TextColor3 = Color3.fromRGB(220, 220, 230)
+            hideDisplayBtn.Font = Enum.Font.GothamMedium
+            hideDisplayBtn.TextSize = 12
+            hideDisplayBtn.AutoButtonColor = false
+            hideDisplayBtn.ZIndex = 3
+            hideDisplayBtn.Parent = titleBar
+            local hdCorner = Instance.new("UICorner")
+            hdCorner.CornerRadius = UDim.new(0, 6)
+            hdCorner.Parent = hideDisplayBtn
+            local hdStroke = Instance.new("UIStroke")
+            hdStroke.Color = Color3.fromRGB(70, 70, 85)
+            hdStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+            hdStroke.Parent = hideDisplayBtn
+
+            local hideUserBtn = Instance.new("TextButton")
+            hideUserBtn.Size = UDim2.new(0, 90, 0, 24)
+            hideUserBtn.Position = UDim2.new(1, -310, 0.5, -12)
+            hideUserBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+            hideUserBtn.BorderSizePixel = 0
+            hideUserBtn.Text = "Hide @User"
+            hideUserBtn.TextColor3 = Color3.fromRGB(220, 220, 230)
+            hideUserBtn.Font = Enum.Font.GothamMedium
+            hideUserBtn.TextSize = 12
+            hideUserBtn.AutoButtonColor = false
+            hideUserBtn.ZIndex = 3
+            hideUserBtn.Parent = titleBar
+            local huCorner = Instance.new("UICorner")
+            huCorner.CornerRadius = UDim.new(0, 6)
+            huCorner.Parent = hideUserBtn
+            local huStroke = Instance.new("UIStroke")
+            huStroke.Color = Color3.fromRGB(70, 70, 85)
+            huStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+            huStroke.Parent = hideUserBtn
+
+            UserInputService.InputBegan:Connect(function(input, gpe)
+                if listening and input.UserInputType == Enum.UserInputType.Keyboard then
+                    currentKeybind = input.KeyCode
+                    keybindFrame.Text = "Key: " .. input.KeyCode.Name
+                    keybindFrame.TextColor3 = Color3.fromRGB(220, 220, 230)
+                    keybindStroke.Color = Color3.fromRGB(70, 70, 85)
+                    listening = false
+                    return
+                end
+
+                if not gpe and input.KeyCode == currentKeybind then
+                    chatWindow.Visible = not chatWindow.Visible
+                end
+            end)
+
+            local resizeHandle = Instance.new("TextButton")
+            resizeHandle.Name = "ResizeHandle"
+            resizeHandle.Size = UDim2.new(0, 15, 0, 15)
+            resizeHandle.Position = UDim2.new(1, -15, 1, -15)
+            resizeHandle.BackgroundTransparency = 1
+            resizeHandle.Text = "Ã¢â€ Ëœ"
+            resizeHandle.TextColor3 = Color3.fromRGB(100, 100, 120)
+            resizeHandle.TextSize = 12
+            resizeHandle.Font = Enum.Font.GothamBold
+            resizeHandle.ZIndex = 2
+            resizeHandle.Parent = chatWindow
+
+            local scrollingFrame = Instance.new("ScrollingFrame")
+            scrollingFrame.Name = "MessageContainer"
+            scrollingFrame.Size = UDim2.new(1, -20, 1, -100)
+            scrollingFrame.Position = UDim2.new(0, 10, 0, 45)
+            scrollingFrame.BackgroundTransparency = 1
+            scrollingFrame.BorderSizePixel = 0
+            scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+            scrollingFrame.ScrollBarThickness = 4
+            scrollingFrame.ScrollBarImageColor3 = Color3.fromRGB(120, 120, 140)
+            scrollingFrame.Parent = chatWindow
+
+            local uiListLayout = Instance.new("UIListLayout")
+            uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            uiListLayout.Padding = UDim.new(0, 6)
+            uiListLayout.Parent = scrollingFrame
+            uiListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+                scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, uiListLayout.AbsoluteContentSize.Y)
+                scrollingFrame.CanvasPosition = Vector2.new(0, scrollingFrame.AbsoluteCanvasSize.Y)
+            end)
+
+            local uiPadding = Instance.new("UIPadding")
+            uiPadding.PaddingLeft = UDim.new(0, 4)
+            uiPadding.PaddingRight = UDim.new(0, 8)
+            uiPadding.PaddingBottom = UDim.new(0, 10)
+            uiPadding.Parent = scrollingFrame
+
+            local inputFrame = Instance.new("Frame")
+            inputFrame.Name = "InputContainer"
+            inputFrame.Size = UDim2.new(1, -20, 0, 40)
+            inputFrame.Position = UDim2.new(0, 10, 1, -50)
+            inputFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+            inputFrame.BackgroundTransparency = 0.2
+            inputFrame.BorderSizePixel = 0
+            inputFrame.Parent = chatWindow
+
+            local inputCorner = Instance.new("UICorner")
+            inputCorner.CornerRadius = UDim.new(0, 8)
+            inputCorner.Parent = inputFrame
+            
+            local inputStroke = Instance.new("UIStroke")
+            inputStroke.Color = Color3.fromRGB(60, 60, 75)
+            inputStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+            inputStroke.Parent = inputFrame
+
+            local textBox = Instance.new("TextBox")
+            textBox.Size = UDim2.new(1, -20, 1, 0)
+            textBox.Position = UDim2.new(0, 10, 0, 0)
+            textBox.BackgroundTransparency = 1
+            textBox.Text = ""
+            textBox.PlaceholderText = "Type a message..."
+            textBox.PlaceholderColor3 = Color3.fromRGB(130, 130, 145)
+            textBox.TextColor3 = Color3.fromRGB(240, 240, 255)
+            textBox.TextXAlignment = Enum.TextXAlignment.Left
+            textBox.Font = Enum.Font.Gotham
+            textBox.TextSize = 13
+            textBox.ClearTextOnFocus = false
+            textBox.Parent = inputFrame
+
+            local maxLength = 256
+            textBox:GetPropertyChangedSignal("Text"):Connect(function()
+                if string.len(textBox.Text) > maxLength then
+                    textBox.Text = string.sub(textBox.Text, 1, maxLength)
+                end
+            end)
+
+            local function FormatMessage(rawText)
+                local prefix, msg = rawText:match("^(.-):%s*(.*)$")
+                if not prefix then return rawText end
+
+                local formatted = prefix
+                local username = string.match(prefix, "%(@(.-)%)")
+                local display = string.match(prefix, "^%[?(.-)%s*%(@") or string.match(prefix, "^(.-)%s*%(@")
+
+                if display and username then
+                    display = display:gsub("^%[", "")
+                    
+                    local outDisplay = hideDisplay and "REDACTED" or display
+                    local outUser = hideUser and "REDACTED" or ("@" .. username)
+                    
+                    formatted = "[" .. outDisplay .. " (" .. outUser .. ")]"
+                else
+                    if hideDisplay or hideUser then
+                        formatted = "[REDACTED]"
+                    end
+                end
+
+                return formatted .. ": " .. msg
+            end
+
+            local function RefreshMessages()
+                for _, child in ipairs(scrollingFrame:GetChildren()) do
+                    if child:GetAttribute("RawText") then
+                        child.Text = FormatMessage(child:GetAttribute("RawText"))
+                    end
+                end
+            end
+
+            hideDisplayBtn.MouseButton1Click:Connect(function()
+                hideDisplay = not hideDisplay
+                hideDisplayBtn.BackgroundColor3 = hideDisplay and Color3.fromRGB(60, 100, 150) or Color3.fromRGB(40, 40, 50)
+                RefreshMessages()
+            end)
+
+            hideUserBtn.MouseButton1Click:Connect(function()
+                hideUser = not hideUser
+                hideUserBtn.BackgroundColor3 = hideUser and Color3.fromRGB(60, 100, 150) or Color3.fromRGB(40, 40, 50)
+                RefreshMessages()
+            end)
+
+            local messageCount = 0
+            FroLib.addMessage = function(text)
+                if text == nil then return end
+                messageCount += 1
+                local messageLabel = Instance.new("TextBox")
+                messageLabel.Name = "Msg_" .. tostring(messageCount)
+                messageLabel.AutomaticSize = Enum.AutomaticSize.Y
+                messageLabel.Size = UDim2.new(1, 0, 0, 0)
+                messageLabel.BackgroundTransparency = 1
+                messageLabel.Font = Enum.Font.Gotham
+                messageLabel.TextSize = 13
+                messageLabel.TextColor3 = Color3.fromRGB(220, 220, 235)
+                messageLabel.TextWrapped = true
+                messageLabel.TextXAlignment = Enum.TextXAlignment.Left
+                messageLabel.TextEditable = false
+                messageLabel.ClearTextOnFocus = false
+                messageLabel.LayoutOrder = messageCount
+                messageLabel.RichText = true
+                messageLabel:SetAttribute("RawText", text)
+                messageLabel.Text = FormatMessage(text)
+                messageLabel.Parent = scrollingFrame
+            end
+
+            textBox.FocusLost:Connect(function(enterPressed)
+                if enterPressed and textBox.Text ~= "" then
+                    local textToSend = textBox.Text
+                    textBox.Text = ""
+                    FroLib.SendMsg(textToSend)
+                    task.defer(function()
+                        textBox:CaptureFocus()
+                    end)
+                end
+            end)
+
+            local minSize = Vector2.new(250, 150)
+            local maxSize = Vector2.new(800, 600)
+
+            local dragging = false
+            local dragStartPos = Vector2.new()
+            local windowStartPos = UDim2.new()
+
+            local resizing = false
+            local resizeStartPos = Vector2.new()
+            local windowStartSize = Vector2.new()
+
+            titleBar.InputBegan:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                    dragging = true
+                    dragStartPos = Vector2.new(input.Position.X, input.Position.Y)
+                    windowStartPos = chatWindow.Position
+                    local connection
+                    connection = input.Changed:Connect(function()
+                        if input.UserInputState == Enum.UserInputState.End then
+                            dragging = false
+                            connection:Disconnect()
+                        end
+                    end)
+                end
+            end)
+
+            resizeHandle.InputBegan:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                    resizing = true
+                    resizeStartPos = Vector2.new(input.Position.X, input.Position.Y)
+                    windowStartSize = chatWindow.AbsoluteSize
+                    local connection
+                    connection = input.Changed:Connect(function()
+                        if input.UserInputState == Enum.UserInputState.End then
+                            resizing = false
+                            connection:Disconnect()
+                        end
+                    end)
+                end
+            end)
+
+            UserInputService.InputChanged:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+                    local currentMousePos = Vector2.new(input.Position.X, input.Position.Y)
+                    if dragging then
+                        local delta = currentMousePos - dragStartPos
+                        chatWindow.Position = UDim2.new(
+                            windowStartPos.X.Scale,
+                            windowStartPos.X.Offset + delta.X,
+                            windowStartPos.Y.Scale,
+                            windowStartPos.Y.Offset + delta.Y
+                        )
+                    elseif resizing then
+                        local delta = currentMousePos - resizeStartPos
+                        local newWidth = math.clamp(windowStartSize.X + delta.X, minSize.X, maxSize.X)
+                        local newHeight = math.clamp(windowStartSize.Y + delta.Y, minSize.Y, maxSize.Y)
+                        chatWindow.Size = UDim2.new(0, newWidth, 0, newHeight)
+                    end
+                end
+            end)
+
+            resizeHandle.InputBegan:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                    resizing = true
+                    resizeStartPos = Vector2.new(input.Position.X, input.Position.Y)
+                    windowStartSize = chatWindow.AbsoluteSize
+                    
+                    local connection
+                    connection = input.Changed:Connect(function()
+                        if input.UserInputState == Enum.UserInputState.End then
+                            resizing = false
+                            connection:Disconnect()
+                        end
+                    end)
+                end
+            end)
+
+            UserInputService.InputChanged:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+                    local currentMousePos = Vector2.new(input.Position.X, input.Position.Y)
+                    
+                    if dragging then
+                        local delta = currentMousePos - dragStartPos
+                        chatWindow.Position = UDim2.new(
+                            windowStartPos.X.Scale,
+                            windowStartPos.X.Offset + delta.X,
+                            windowStartPos.Y.Scale,
+                            windowStartPos.Y.Offset + delta.Y
+                        )
+                    elseif resizing then
+                        local delta = currentMousePos - resizeStartPos
+                        local newWidth = math.clamp(windowStartSize.X + delta.X, minSize.X, maxSize.X)
+                        local newHeight = math.clamp(windowStartSize.Y + delta.Y, minSize.Y, maxSize.Y)
+                        
+                        chatWindow.Size = UDim2.new(0, newWidth, 0, newHeight)
+                    end
+                end
+            end
