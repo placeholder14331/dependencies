@@ -416,3 +416,4 @@ FroLib.createChatWindow = function()
                     end
                 end
             end)
+        end
