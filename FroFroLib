@@ -1,4 +1,4 @@
-local FroLib = getgenv().FroLib
+local FroLib = ...
 if not FroLib then return end
 
 FroLib.createChatWindow = function()
@@ -168,7 +168,7 @@ FroLib.createChatWindow = function()
             resizeHandle.Size = UDim2.new(0, 15, 0, 15)
             resizeHandle.Position = UDim2.new(1, -15, 1, -15)
             resizeHandle.BackgroundTransparency = 1
-            resizeHandle.Text = "Ã¢â€ Ëœ"
+            resizeHandle.Text = "↘"
             resizeHandle.TextColor3 = Color3.fromRGB(100, 100, 120)
             resizeHandle.TextSize = 12
             resizeHandle.Font = Enum.Font.GothamBold
@@ -415,4 +415,4 @@ FroLib.createChatWindow = function()
                         chatWindow.Size = UDim2.new(0, newWidth, 0, newHeight)
                     end
                 end
-            end
+            end)
