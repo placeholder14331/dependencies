@@ -5,6 +5,7 @@ local function returncurrentgame(pid)
         [18259975825]     = "Grave Digger",
         [115209351507608] = "The Armory",
         [155615604]       = "Prison Life",
+        [15561786880]     = "QuickDraw: Legacy",
     }
     if placeids[pid] then
         return placeids[pid]
