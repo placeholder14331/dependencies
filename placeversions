@@ -1,7 +1,7 @@
 local placevers = {
     [13438553315] = {
         Name = "Decaying Winter",
-        PlaceVersion = 3148,
+        PlaceVersion = 3149,
     },
     [18259975825] = {
         Name = "Grave/Digger",
@@ -21,7 +21,7 @@ local placevers = {
     },
     [15561786880] = {
         Name = "QuickDraw: Legacy",
-        PlaceVersion = 5806,
+        PlaceVersion = 5845,
     },
 }
 return placevers
