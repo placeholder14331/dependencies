@@ -31,6 +31,7 @@ getgenv().Options = Options;
 local Library = {
     Registry = {};
     RegistryMap = {};
+    DetachedTabs = {};
 
     HudRegistry = {};
 
@@ -399,6 +400,11 @@ function Library:Unload()
         Library.OnUnload()
     end
 
+    for TabFrame in next, Library.DetachedTabs do
+        pcall(function() TabFrame:Destroy() end);
+    end;
+    table.clear(Library.DetachedTabs);
+
     ScreenGui:Destroy()
 end
 
@@ -407,6 +413,8 @@ function Library:OnUnload(Callback)
 end
 
 Library:GiveSignal(ScreenGui.DescendantRemoving:Connect(function(Instance)
+    if Library.DetachingTab then return end;
+
     if Library.RegistryMap[Instance] then
         Library:RemoveFromRegistry(Instance);
     end;
@@ -3219,6 +3227,8 @@ function Library:CreateWindow(...)
             Blocker.BackgroundTransparency = 0;
             TabButton.BackgroundColor3 = Library.MainColor;
             Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'MainColor';
+            TabFrame.Parent = TabContainer;
+            Library.DetachedTabs[TabFrame] = nil;
             TabFrame.Visible = true;
         end;
 
@@ -3227,6 +3237,11 @@ function Library:CreateWindow(...)
             TabButton.BackgroundColor3 = Library.BackgroundColor;
             Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'BackgroundColor';
             TabFrame.Visible = false;
+
+            Library.DetachingTab = true;
+            TabFrame.Parent = nil;
+            Library.DetachingTab = false;
+            Library.DetachedTabs[TabFrame] = true;
         end;
 
         function Tab:SetLayoutOrder(Position)
