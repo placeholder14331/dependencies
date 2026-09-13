@@ -9,7 +9,7 @@ local RenderStepped = RunService.RenderStepped;
 local LocalPlayer = Players.LocalPlayer;
 local Mouse = LocalPlayer:GetMouse();
 
-local ProtectGui = protectgui or (syn and syn.protect_gui) or (function() end);
+local ProtectGui = gethui() or protectgui or (syn and syn.protect_gui) or (function() end);
 
 local ScreenGui = Instance.new('ScreenGui');
 ProtectGui(ScreenGui);
@@ -175,13 +175,16 @@ function Library:MakeDraggable(Instance, Cutoff)
                 return;
             end;
 
+            local LastX, LastY;
+
             while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-                Instance.Position = UDim2.new(
-                    0,
-                    Mouse.X - ObjPos.X + (Instance.Size.X.Offset * Instance.AnchorPoint.X),
-                    0,
-                    Mouse.Y - ObjPos.Y + (Instance.Size.Y.Offset * Instance.AnchorPoint.Y)
-                );
+                local NewX = Mouse.X - ObjPos.X + (Instance.Size.X.Offset * Instance.AnchorPoint.X);
+                local NewY = Mouse.Y - ObjPos.Y + (Instance.Size.Y.Offset * Instance.AnchorPoint.Y);
+
+                if NewX ~= LastX or NewY ~= LastY then
+                    LastX, LastY = NewX, NewY;
+                    Instance.Position = UDim2.new(0, NewX, 0, NewY);
+                end;
 
                 RenderStepped:Wait();
             end;
@@ -468,8 +471,16 @@ do
             Parent = ScreenGui,
         });
 
-        DisplayFrame:GetPropertyChangedSignal('AbsolutePosition'):Connect(function()
+        local function SyncPickerFrame()
             PickerFrameOuter.Position = UDim2.fromOffset(DisplayFrame.AbsolutePosition.X, DisplayFrame.AbsolutePosition.Y + 18);
+        end
+
+        DisplayFrame:GetPropertyChangedSignal('AbsolutePosition'):Connect(function()
+            if PickerFrameOuter.Visible then SyncPickerFrame() end
+        end)
+
+        PickerFrameOuter:GetPropertyChangedSignal('Visible'):Connect(function()
+            if PickerFrameOuter.Visible then SyncPickerFrame() end
         end)
 
         local PickerFrameInner = Library:Create('Frame', {
@@ -720,7 +731,13 @@ do
                 )
             end
 
-            DisplayFrame:GetPropertyChangedSignal('AbsolutePosition'):Connect(updateMenuPosition)
+            DisplayFrame:GetPropertyChangedSignal('AbsolutePosition'):Connect(function()
+                if ContextMenu.Container.Visible then updateMenuPosition() end
+            end)
+
+            ContextMenu.Container:GetPropertyChangedSignal('Visible'):Connect(function()
+                if ContextMenu.Container.Visible then updateMenuPosition() end
+            end)
             ContextMenu.Inner.Layout:GetPropertyChangedSignal('AbsoluteContentSize'):Connect(updateMenuSize)
 
             task.spawn(updateMenuPosition)
@@ -1063,8 +1080,16 @@ do
             Parent = ScreenGui;
         });
 
-        ToggleLabel:GetPropertyChangedSignal('AbsolutePosition'):Connect(function()
+        local function SyncModeSelect()
             ModeSelectOuter.Position = UDim2.fromOffset(ToggleLabel.AbsolutePosition.X + ToggleLabel.AbsoluteSize.X + 4, ToggleLabel.AbsolutePosition.Y + 1);
+        end
+
+        ToggleLabel:GetPropertyChangedSignal('AbsolutePosition'):Connect(function()
+            if ModeSelectOuter.Visible then SyncModeSelect() end
+        end);
+
+        ModeSelectOuter:GetPropertyChangedSignal('Visible'):Connect(function()
+            if ModeSelectOuter.Visible then SyncModeSelect() end
         end);
 
         local ModeSelectInner = Library:Create('Frame', {
