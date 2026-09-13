@@ -480,12 +480,16 @@ do
             PickerFrameOuter.Position = UDim2.fromOffset(DisplayFrame.AbsolutePosition.X, DisplayFrame.AbsolutePosition.Y + 18);
         end
 
-        DisplayFrame:GetPropertyChangedSignal('AbsolutePosition'):Connect(function()
-            if PickerFrameOuter.Visible then SyncPickerFrame() end
-        end)
+        local PickerFollow;
 
         PickerFrameOuter:GetPropertyChangedSignal('Visible'):Connect(function()
-            if PickerFrameOuter.Visible then SyncPickerFrame() end
+            if PickerFrameOuter.Visible then
+                SyncPickerFrame();
+                PickerFollow = PickerFollow or DisplayFrame:GetPropertyChangedSignal('AbsolutePosition'):Connect(SyncPickerFrame);
+            elseif PickerFollow then
+                PickerFollow:Disconnect();
+                PickerFollow = nil;
+            end
         end)
 
         local PickerFrameInner = Library:Create('Frame', {
@@ -736,12 +740,16 @@ do
                 )
             end
 
-            DisplayFrame:GetPropertyChangedSignal('AbsolutePosition'):Connect(function()
-                if ContextMenu.Container.Visible then updateMenuPosition() end
-            end)
+            local MenuFollow;
 
             ContextMenu.Container:GetPropertyChangedSignal('Visible'):Connect(function()
-                if ContextMenu.Container.Visible then updateMenuPosition() end
+                if ContextMenu.Container.Visible then
+                    updateMenuPosition();
+                    MenuFollow = MenuFollow or DisplayFrame:GetPropertyChangedSignal('AbsolutePosition'):Connect(updateMenuPosition);
+                elseif MenuFollow then
+                    MenuFollow:Disconnect();
+                    MenuFollow = nil;
+                end
             end)
             ContextMenu.Inner.Layout:GetPropertyChangedSignal('AbsoluteContentSize'):Connect(updateMenuSize)
 
@@ -1089,12 +1097,16 @@ do
             ModeSelectOuter.Position = UDim2.fromOffset(ToggleLabel.AbsolutePosition.X + ToggleLabel.AbsoluteSize.X + 4, ToggleLabel.AbsolutePosition.Y + 1);
         end
 
-        ToggleLabel:GetPropertyChangedSignal('AbsolutePosition'):Connect(function()
-            if ModeSelectOuter.Visible then SyncModeSelect() end
-        end);
+        local ModeFollow;
 
         ModeSelectOuter:GetPropertyChangedSignal('Visible'):Connect(function()
-            if ModeSelectOuter.Visible then SyncModeSelect() end
+            if ModeSelectOuter.Visible then
+                SyncModeSelect();
+                ModeFollow = ModeFollow or ToggleLabel:GetPropertyChangedSignal('AbsolutePosition'):Connect(SyncModeSelect);
+            elseif ModeFollow then
+                ModeFollow:Disconnect();
+                ModeFollow = nil;
+            end
         end);
 
         local ModeSelectInner = Library:Create('Frame', {
@@ -2314,7 +2326,17 @@ do
         RecalculateListPosition();
         RecalculateListSize();
 
-        DropdownOuter:GetPropertyChangedSignal('AbsolutePosition'):Connect(RecalculateListPosition);
+        local ListFollow;
+
+        ListOuter:GetPropertyChangedSignal('Visible'):Connect(function()
+            if ListOuter.Visible then
+                RecalculateListPosition();
+                ListFollow = ListFollow or DropdownOuter:GetPropertyChangedSignal('AbsolutePosition'):Connect(RecalculateListPosition);
+            elseif ListFollow then
+                ListFollow:Disconnect();
+                ListFollow = nil;
+            end
+        end);
 
         local ListInner = Library:Create('Frame', {
             BackgroundColor3 = Library.MainColor;
