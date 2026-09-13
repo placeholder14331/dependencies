@@ -9,13 +9,18 @@ local RenderStepped = RunService.RenderStepped;
 local LocalPlayer = Players.LocalPlayer;
 local Mouse = LocalPlayer:GetMouse();
 
-local ProtectGui = protectgui or (syn and syn.protect_gui) or (function() end);
+local ProtectGui = protectgui or (syn and syn.protect_gui);
+if typeof(ProtectGui) ~= 'function' then
+    ProtectGui = function() end;
+end;
+
+local HiddenUI = (typeof(gethui) == 'function') and gethui() or nil;
 
 local ScreenGui = Instance.new('ScreenGui');
 ProtectGui(ScreenGui);
 
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global;
-ScreenGui.Parent = CoreGui;
+ScreenGui.Parent = (typeof(HiddenUI) == 'Instance' and HiddenUI) or CoreGui;
 
 local Toggles = {};
 local Options = {};
