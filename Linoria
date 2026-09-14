@@ -3092,12 +3092,10 @@ function Library:CreateWindow(...)
         Parent = MainSectionInner;
     });
 
-    local TabListLayout = Library:Create('UIListLayout', {
-        Padding = UDim.new(0, Config.TabPadding);
-        FillDirection = Enum.FillDirection.Horizontal;
-        SortOrder = Enum.SortOrder.LayoutOrder;
-        Parent = TabArea;
-    });
+    -- Tab buttons are laid out manually (see Window:UpdateTabLayout) so they wrap
+    -- onto extra rows instead of overflowing the window once there are a lot of tabs.
+    local TabButtons = {};
+    local TabRowHeight = 21;
 
     local TabContainer = Library:Create('Frame', {
         BackgroundColor3 = Library.MainColor;
@@ -3114,6 +3112,120 @@ function Library:CreateWindow(...)
         BorderColor3 = 'OutlineColor';
     });
 
+    local UpdatingTabLayout = false;
+
+    local function GetTabAreaWidth()
+        local Width = TabArea.AbsoluteSize.X;
+
+        if Width <= 0 then
+            -- The gui might not have been rendered yet, fall back to the configured size
+            -- minus the window / section paddings.
+            Width = Outer.AbsoluteSize.X;
+
+            if Width <= 0 then
+                Width = Config.Size.X.Offset;
+            end;
+
+            Width = Width - 34;
+        end;
+
+        return math.max(Width, 1);
+    end;
+
+    function Window:UpdateTabLayout()
+        if UpdatingTabLayout or #TabButtons == 0 then
+            return;
+        end;
+
+        UpdatingTabLayout = true;
+
+        local AreaWidth = GetTabAreaWidth();
+        local Padding = Config.TabPadding;
+
+        table.sort(TabButtons, function(A, B)
+            if A.Button.LayoutOrder == B.Button.LayoutOrder then
+                return A.Index < B.Index;
+            end;
+
+            return A.Button.LayoutOrder < B.Button.LayoutOrder;
+        end);
+
+        local TotalWidth = -Padding;
+
+        for _, Info in ipairs(TabButtons) do
+            TotalWidth = TotalWidth + Padding + math.min(Info.Width, AreaWidth);
+        end;
+
+        -- Spread the tabs over as few rows as possible, keeping the rows evenly filled.
+        local RowCount = math.max(1, math.ceil(TotalWidth / AreaWidth));
+        local TargetWidth = TotalWidth / RowCount;
+
+        local Rows = {};
+        local Row = { Width = 0 };
+
+        for _, Info in ipairs(TabButtons) do
+            local Width = math.min(Info.Width, AreaWidth);
+
+            if #Row > 0 then
+                local NewWidth = Row.Width + Padding + Width;
+                local Overflows = NewWidth > AreaWidth;
+                local Unbalanced = (#Rows + 1) < RowCount
+                    and math.abs(NewWidth - TargetWidth) > math.abs(Row.Width - TargetWidth);
+
+                if Overflows or Unbalanced then
+                    table.insert(Rows, Row);
+                    Row = { Width = 0 };
+                end;
+            end;
+
+            Row.Width = Row.Width + (#Row > 0 and Padding or 0) + Width;
+            table.insert(Row, { Info = Info, Width = Width });
+        end;
+
+        if #Row > 0 then
+            table.insert(Rows, Row);
+        end;
+
+        for RowIndex, CurrentRow in ipairs(Rows) do
+            local Y = (RowIndex - 1) * (TabRowHeight + Padding);
+            local X = 0;
+
+            -- Stretch every wrapped row so the rows end on the same edge.
+            local Available = AreaWidth - (Padding * (#CurrentRow - 1));
+            local Natural = CurrentRow.Width - (Padding * (#CurrentRow - 1));
+            local Scale = (#Rows > 1 and Natural > 0) and (Available / Natural) or 1;
+            local Used = 0;
+
+            for Index, Entry in ipairs(CurrentRow) do
+                local Width = math.floor(Entry.Width * Scale);
+
+                if Index == #CurrentRow and Scale ~= 1 then
+                    Width = Available - Used; -- absorb the rounding leftovers
+                end;
+
+                Used = Used + Width;
+
+                Entry.Info.Button.Position = UDim2.fromOffset(X, Y);
+                Entry.Info.Button.Size = UDim2.fromOffset(Width, TabRowHeight);
+                Entry.Info.Blocker.Visible = RowIndex == #Rows;
+
+                X = X + Width + Padding;
+            end;
+        end;
+
+        local AreaHeight = (#Rows * TabRowHeight) + ((#Rows - 1) * Padding);
+
+        TabArea.Size = UDim2.new(1, -16, 0, AreaHeight);
+        TabContainer.Position = UDim2.new(0, 8, 0, 8 + AreaHeight + 1);
+        TabContainer.Size = UDim2.new(1, -16, 1, -(8 + AreaHeight + 1 + 8));
+
+        UpdatingTabLayout = false;
+    end;
+
+    TabArea:GetPropertyChangedSignal('AbsoluteSize'):Connect(function()
+        Window:UpdateTabLayout();
+    end);
+
     function Window:SetWindowTitle(Title)
         WindowLabel.Text = Title;
     end;
@@ -3129,7 +3241,7 @@ function Library:CreateWindow(...)
         local TabButton = Library:Create('Frame', {
             BackgroundColor3 = Library.BackgroundColor;
             BorderColor3 = Library.OutlineColor;
-            Size = UDim2.new(0, TabButtonWidth + 8 + 4, 1, 0);
+            Size = UDim2.fromOffset(TabButtonWidth + 8 + 4, TabRowHeight);
             ZIndex = 1;
             Parent = TabArea;
         });
@@ -3143,6 +3255,7 @@ function Library:CreateWindow(...)
             Position = UDim2.new(0, 0, 0, 0);
             Size = UDim2.new(1, 0, 1, -1);
             Text = Name;
+            TextTruncate = Enum.TextTruncate.AtEnd;
             ZIndex = 1;
             Parent = TabButton;
         });
@@ -3161,6 +3274,15 @@ function Library:CreateWindow(...)
             BackgroundColor3 = 'MainColor';
         });
 
+        table.insert(TabButtons, {
+            Button = TabButton;
+            Blocker = Blocker;
+            Width = TabButtonWidth + 8 + 4;
+            Index = #TabButtons + 1;
+        });
+
+        Window:UpdateTabLayout();
+
         local TabFrame = Library:Create('Frame', {
             Name = 'TabFrame',
             BackgroundTransparency = 1;
@@ -3175,7 +3297,7 @@ function Library:CreateWindow(...)
             BackgroundTransparency = 1;
             BorderSizePixel = 0;
             Position = UDim2.new(0, 8 - 1, 0, 8 - 1);
-            Size = UDim2.new(0.5, -12 + 2, 0, 507 + 2);
+            Size = UDim2.new(0.5, -12 + 2, 1, -18);
             CanvasSize = UDim2.new(0, 0, 0, 0);
             BottomImage = '';
             TopImage = '';
@@ -3188,7 +3310,7 @@ function Library:CreateWindow(...)
             BackgroundTransparency = 1;
             BorderSizePixel = 0;
             Position = UDim2.new(0.5, 4 + 1, 0, 8 - 1);
-            Size = UDim2.new(0.5, -12 + 2, 0, 507 + 2);
+            Size = UDim2.new(0.5, -12 + 2, 1, -18);
             CanvasSize = UDim2.new(0, 0, 0, 0);
             BottomImage = '';
             TopImage = '';
@@ -3246,7 +3368,7 @@ function Library:CreateWindow(...)
 
         function Tab:SetLayoutOrder(Position)
             TabButton.LayoutOrder = Position;
-            TabListLayout:ApplyLayout();
+            Window:UpdateTabLayout();
         end;
 
         function Tab:AddGroupbox(Info)
