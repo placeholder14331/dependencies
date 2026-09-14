@@ -362,15 +362,7 @@ function Library:RemoveFromRegistry(Instance)
 end;
 
 function Library:UpdateColorsUsingRegistry()
-    -- TODO: Could have an 'active' list of objects
-    -- where the active list only contains Visible objects.
 
-    -- IMPL: Could setup .Changed events on the AddToRegistry function
-    -- that listens for the 'Visible' propert being changed.
-    -- Visible: true => Add to active list, and call UpdateColors function
-    -- Visible: false => Remove from active list.
-
-    -- The above would be especially efficient for a rainbow menu color or live color-changing.
 
     for Idx, Object in next, Library.Registry do
         for Property, ColorIdx in next, Object.Properties do
@@ -384,7 +376,6 @@ function Library:UpdateColorsUsingRegistry()
 end;
 
 function Library:GiveSignal(Signal)
-    -- Only used for signals not attached to library instances, as those should be cleaned up on object destruction by Roblox
     table.insert(Library.Signals, Signal)
 end
 
@@ -2520,6 +2511,7 @@ do
 
                             Library:SafeCallback(Dropdown.Callback, Dropdown.Value);
                             Library:SafeCallback(Dropdown.Changed, Dropdown.Value);
+                            Library:UpdateDependencyBoxes();
 
                             Library:AttemptSave();
                         end;
@@ -2586,6 +2578,7 @@ do
 
             Library:SafeCallback(Dropdown.Callback, Dropdown.Value);
             Library:SafeCallback(Dropdown.Changed, Dropdown.Value);
+            Library:UpdateDependencyBoxes();
         end;
 
         DropdownOuter.InputBegan:Connect(function(Input)
@@ -2705,6 +2698,22 @@ do
                     Holder.Visible = false;
                     Depbox:Resize();
                     return;
+                end;
+
+                if Elem.Type == 'Dropdown' and not Elem.Multi then
+                    local Matches;
+
+                    if type(Value) == 'table' then
+                        Matches = table.find(Value, Elem.Value) ~= nil;
+                    else
+                        Matches = Elem.Value == Value;
+                    end;
+
+                    if not Matches then
+                        Holder.Visible = false;
+                        Depbox:Resize();
+                        return;
+                    end;
                 end;
             end;
 
@@ -3092,8 +3101,6 @@ function Library:CreateWindow(...)
         Parent = MainSectionInner;
     });
 
-    -- Tab buttons are laid out manually (see Window:UpdateTabLayout) so they wrap
-    -- onto extra rows instead of overflowing the window once there are a lot of tabs.
     local TabButtons = {};
     local TabRowHeight = 21;
 
@@ -3118,8 +3125,6 @@ function Library:CreateWindow(...)
         local Width = TabArea.AbsoluteSize.X;
 
         if Width <= 0 then
-            -- The gui might not have been rendered yet, fall back to the configured size
-            -- minus the window / section paddings.
             Width = Outer.AbsoluteSize.X;
 
             if Width <= 0 then
@@ -3156,7 +3161,6 @@ function Library:CreateWindow(...)
             TotalWidth = TotalWidth + Padding + math.min(Info.Width, AreaWidth);
         end;
 
-        -- Spread the tabs over as few rows as possible, keeping the rows evenly filled.
         local RowCount = math.max(1, math.ceil(TotalWidth / AreaWidth));
         local TargetWidth = TotalWidth / RowCount;
 
@@ -3190,7 +3194,6 @@ function Library:CreateWindow(...)
             local Y = (RowIndex - 1) * (TabRowHeight + Padding);
             local X = 0;
 
-            -- Stretch every wrapped row so the rows end on the same edge.
             local Available = AreaWidth - (Padding * (#CurrentRow - 1));
             local Natural = CurrentRow.Width - (Padding * (#CurrentRow - 1));
             local Scale = (#Rows > 1 and Natural > 0) and (Available / Natural) or 1;
@@ -3200,7 +3203,7 @@ function Library:CreateWindow(...)
                 local Width = math.floor(Entry.Width * Scale);
 
                 if Index == #CurrentRow and Scale ~= 1 then
-                    Width = Available - Used; -- absorb the rounding leftovers
+                    Width = Available - Used;
                 end;
 
                 Used = Used + Width;
@@ -3647,7 +3650,6 @@ function Library:CreateWindow(...)
                 Tab:AddBlank(3);
                 Tab:Resize();
 
-                -- Show first tab (number is 2 cus of the UIListLayout that also sits in that instance)
                 if #TabboxButtons:GetChildren() == 2 then
                     Tab:Show();
                 end;
@@ -3674,7 +3676,6 @@ function Library:CreateWindow(...)
             end;
         end);
 
-        -- This was the first tab added, so we show it by default.
         if #TabContainer:GetChildren() == 1 then
             Tab:ShowTab();
         end;
@@ -3707,11 +3708,10 @@ function Library:CreateWindow(...)
         ModalElement.Modal = Toggled;
 
         if Toggled then
-            -- A bit scuffed, but if we're going from not toggled -> toggled we want to show the frame immediately so that the fade is visible.
+
             Outer.Visible = true;
 
             task.spawn(function()
-                -- TODO: add cursor fade?
                 local State = InputService.MouseIconEnabled;
 
                 local Cursor = Drawing.new('Triangle');
