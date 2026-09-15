@@ -2689,40 +2689,53 @@ do
             Depbox:Resize();
         end);
 
-        function Depbox:Update()
-            for _, Dependency in next, Depbox.Dependencies do
-                local Elem = Dependency[1];
-                local Value = Dependency[2];
+        -- Does one dependency entry hold right now?
+        local function DependencyMet(Dependency)
+            local Elem = Dependency[1];
+            local Value = Dependency[2];
 
-                if Elem.Type == 'Toggle' and Elem.Value ~= Value then
-                    Holder.Visible = false;
-                    Depbox:Resize();
-                    return;
+            if Elem.Type == 'Toggle' then
+                return Elem.Value == Value;
+            end;
+
+            -- Dropdowns: `Value` is either the single option that satisfies the entry,
+            -- or a list of options, any one of which does.
+            if Elem.Type == 'Dropdown' and not Elem.Multi then
+                if type(Value) == 'table' then
+                    return table.find(Value, Elem.Value) ~= nil;
                 end;
+                return Elem.Value == Value;
+            end;
 
-                if Elem.Type == 'Dropdown' and not Elem.Multi then
-                    local Matches;
+            -- element types we do not evaluate never block the box
+            return true;
+        end;
 
-                    if type(Value) == 'table' then
-                        Matches = table.find(Value, Elem.Value) ~= nil;
-                    else
-                        Matches = Elem.Value == Value;
+        function Depbox:Update()
+            -- Entries are ANDed by default. Pass `Any = true` in the dependency table to
+            -- OR them instead, for a control that belongs to either of two features.
+            local Any = Depbox.Dependencies.Any == true;
+            local Met = not Any;
+
+            for _, Dependency in ipairs(Depbox.Dependencies) do
+                if Any then
+                    if DependencyMet(Dependency) then
+                        Met = true;
+                        break;
                     end;
-
-                    if not Matches then
-                        Holder.Visible = false;
-                        Depbox:Resize();
-                        return;
-                    end;
+                elseif not DependencyMet(Dependency) then
+                    Met = false;
+                    break;
                 end;
             end;
 
-            Holder.Visible = true;
+            Holder.Visible = Met;
             Depbox:Resize();
         end;
 
         function Depbox:SetupDependencies(Dependencies)
-            for _, Dependency in next, Dependencies do
+            -- ipairs, not next: the table may also carry the `Any` flag as a hash key
+            for _, Dependency in ipairs(Dependencies) do
                 assert(type(Dependency) == 'table', 'SetupDependencies: Dependency is not of type `table`.');
                 assert(Dependency[1], 'SetupDependencies: Dependency is missing element argument.');
                 assert(Dependency[2] ~= nil, 'SetupDependencies: Dependency is missing value argument.');
