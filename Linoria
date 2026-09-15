@@ -310,6 +310,16 @@ function Library:UpdateDependencyBoxes()
     end;
 end;
 
+Library.HideUnboundKeybinds = false;
+
+function Library:RefreshKeybindFrame()
+    for _, Option in next, Options do
+        if type(Option) == 'table' and Option.Type == 'KeyPicker' and Option.Update then
+            Option:Update();
+        end;
+    end;
+end;
+
 function Library:MapValue(Value, MinA, MaxA, MinB, MaxB)
     return (1 - ((Value - MinA) / (MaxA - MinA))) * MinB + ((Value - MinA) / (MaxA - MinA)) * MaxB;
 end;
@@ -1195,7 +1205,9 @@ do
 
             ContainerLabel.Text = string.format('[%s] %s (%s)', KeyPicker.Value, Info.Text, KeyPicker.Mode);
 
-            ContainerLabel.Visible = true;
+            -- With Library.HideUnboundKeybinds on, a picker still sitting on 'None' is
+            -- left out of the list instead of padding it with rows that do nothing.
+            ContainerLabel.Visible = not (Library.HideUnboundKeybinds and KeyPicker.Value == 'None');
             ContainerLabel.TextColor3 = State and Library.AccentColor or Library.FontColor;
 
             Library.RegistryMap[ContainerLabel].Properties.TextColor3 = State and 'AccentColor' or 'FontColor';
