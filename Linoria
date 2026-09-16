@@ -41,6 +41,7 @@ local Library = {
     AccentColor = Color3.fromRGB(0, 85, 255);
     OutlineColor = Color3.fromRGB(50, 50, 50);
     RiskColor = Color3.fromRGB(255, 50, 50),
+    ShowCustomCursor = true;
 
     Black = Color3.new(0, 0, 0);
     Font = Enum.Font.Code,
@@ -283,15 +284,27 @@ function Library:OnHighlight(HighlightInstance, Instance, Properties, Properties
 end;
 
 function Library:MouseIsOverOpenedFrame()
-    for Frame, _ in next, Library.OpenedFrames do
-        local AbsPos, AbsSize = Frame.AbsolutePosition, Frame.AbsoluteSize;
+    local stale = {};
+    local mouseOver = false;
 
-        if Mouse.X >= AbsPos.X and Mouse.X <= AbsPos.X + AbsSize.X
-            and Mouse.Y >= AbsPos.Y and Mouse.Y <= AbsPos.Y + AbsSize.Y then
+    for Frame in next, Library.OpenedFrames do
+        if not Frame.Parent or not Frame.Visible then
+            stale[#stale + 1] = Frame;
+        else
+            local AbsPos, AbsSize = Frame.AbsolutePosition, Frame.AbsoluteSize;
+            if Mouse.X >= AbsPos.X and Mouse.X <= AbsPos.X + AbsSize.X
+                and Mouse.Y >= AbsPos.Y and Mouse.Y <= AbsPos.Y + AbsSize.Y then
 
-            return true;
+                mouseOver = true;
+            end;
         end;
     end;
+
+    for _, Frame in ipairs(stale) do
+        Library.OpenedFrames[Frame] = nil;
+    end;
+
+    return mouseOver;
 end;
 
 function Library:IsMouseOverFrame(Frame)
@@ -2066,20 +2079,22 @@ do
         });
 
         local Fill = Library:Create('Frame', {
-            BackgroundColor3 = Library.AccentColor;
-            BorderColor3 = Library.AccentColorDark;
+            BackgroundColor3 = Info.Color or Library.AccentColor;
+            BorderColor3 = Info.Color and Library:GetDarkerColor(Info.Color) or Library.AccentColorDark;
             Size = UDim2.new(0, 0, 1, 0);
             ZIndex = 7;
             Parent = SliderInner;
         });
 
-        Library:AddToRegistry(Fill, {
-            BackgroundColor3 = 'AccentColor';
-            BorderColor3 = 'AccentColorDark';
-        });
+        if not Info.Color then
+            Library:AddToRegistry(Fill, {
+                BackgroundColor3 = 'AccentColor';
+                BorderColor3 = 'AccentColorDark';
+            });
+        end;
 
         local HideBorderRight = Library:Create('Frame', {
-            BackgroundColor3 = Library.AccentColor;
+            BackgroundColor3 = Info.Color or Library.AccentColor;
             BorderSizePixel = 0;
             Position = UDim2.new(1, 0, 0, 0);
             Size = UDim2.new(0, 1, 1, 0);
@@ -2087,9 +2102,11 @@ do
             Parent = Fill;
         });
 
-        Library:AddToRegistry(HideBorderRight, {
-            BackgroundColor3 = 'AccentColor';
-        });
+        if not Info.Color then
+            Library:AddToRegistry(HideBorderRight, {
+                BackgroundColor3 = 'AccentColor';
+            });
+        end;
 
         local DisplayLabel = Library:CreateLabel({
             Size = UDim2.new(1, 0, 1, 0);
@@ -2543,6 +2560,8 @@ do
         end;
 
         function Dropdown:SetValues(NewValues)
+            Dropdown:CloseDropdown();
+
             if NewValues then
                 Dropdown.Values = NewValues;
             end;
@@ -2568,8 +2587,11 @@ do
         end;
 
         function Dropdown:SetValue(Val)
+            Dropdown:CloseDropdown();
+
             if Dropdown.Multi then
                 local nTable = {};
+                Val = type(Val) == 'table' and Val or {};
 
                 for Value, Bool in next, Val do
                     if table.find(Dropdown.Values, Value) then
@@ -3751,19 +3773,23 @@ function Library:CreateWindow(...)
                 CursorOutline.Visible = true;
 
                 while Toggled and ScreenGui.Parent do
-                    InputService.MouseIconEnabled = false;
+                    local customCursor = Library.ShowCustomCursor ~= false;
+                    InputService.MouseIconEnabled = not customCursor;
+                    Cursor.Visible = customCursor;
+                    CursorOutline.Visible = customCursor;
 
-                    local mPos = InputService:GetMouseLocation();
+                    if customCursor then
+                        local mPos = InputService:GetMouseLocation();
+                        Cursor.Color = Library.AccentColor;
 
-                    Cursor.Color = Library.AccentColor;
+                        Cursor.PointA = Vector2.new(mPos.X, mPos.Y);
+                        Cursor.PointB = Vector2.new(mPos.X + 16, mPos.Y + 6);
+                        Cursor.PointC = Vector2.new(mPos.X + 6, mPos.Y + 16);
 
-                    Cursor.PointA = Vector2.new(mPos.X, mPos.Y);
-                    Cursor.PointB = Vector2.new(mPos.X + 16, mPos.Y + 6);
-                    Cursor.PointC = Vector2.new(mPos.X + 6, mPos.Y + 16);
-
-                    CursorOutline.PointA = Cursor.PointA;
-                    CursorOutline.PointB = Cursor.PointB;
-                    CursorOutline.PointC = Cursor.PointC;
+                        CursorOutline.PointA = Cursor.PointA;
+                        CursorOutline.PointB = Cursor.PointB;
+                        CursorOutline.PointC = Cursor.PointC;
+                    end;
 
                     RenderStepped:Wait();
                 end;
