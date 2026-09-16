@@ -2343,12 +2343,24 @@ do
             Parent = ScreenGui;
         });
 
+        local ListWidth = 0;
+        local ListHeight = MAX_DROPDOWN_ITEMS * 20 + 2;
+
         local function RecalculateListPosition()
             ListOuter.Position = UDim2.fromOffset(DropdownOuter.AbsolutePosition.X, DropdownOuter.AbsolutePosition.Y + DropdownOuter.Size.Y.Offset + 1);
         end;
 
         local function RecalculateListSize(YSize)
-            ListOuter.Size = UDim2.fromOffset(DropdownOuter.AbsoluteSize.X, YSize or (MAX_DROPDOWN_ITEMS * 20 + 2))
+            ListHeight = YSize or ListHeight;
+
+            local Width = DropdownOuter.AbsoluteSize.X;
+            if Width > 0 then
+                ListWidth = Width;
+            end;
+
+            if ListWidth > 0 then
+                ListOuter.Size = UDim2.fromOffset(ListWidth, ListHeight);
+            end;
         end;
 
         RecalculateListPosition();
@@ -2359,6 +2371,7 @@ do
         ListOuter:GetPropertyChangedSignal('Visible'):Connect(function()
             if ListOuter.Visible then
                 RecalculateListPosition();
+                RecalculateListSize();
                 ListFollow = ListFollow or DropdownOuter:GetPropertyChangedSignal('AbsolutePosition'):Connect(RecalculateListPosition);
             elseif ListFollow then
                 ListFollow:Disconnect();
@@ -2570,6 +2583,8 @@ do
         end;
 
         function Dropdown:OpenDropdown()
+            RecalculateListPosition();
+            RecalculateListSize();
             ListOuter.Visible = true;
             Library.OpenedFrames[ListOuter] = true;
             DropdownArrow.Rotation = 180;
