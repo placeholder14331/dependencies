@@ -21,7 +21,7 @@ local placevers = {
     },
     [15561786880] = {
         Name = "QuickDraw: Legacy",
-        PlaceVersion = 6000,
+        PlaceVersion = 1,
     },
 }
 return placevers
