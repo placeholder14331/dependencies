@@ -5,16 +5,18 @@ local placevers = {
     },
     [18259975825] = {
         Name = "Grave/Digger",
-        PlaceVersion = 3060,
+        PlaceVersion = 3074,
     },
     [114931763326993] = {
         Name = "Decaying Winter Legacy",
         PlaceVersion = 68,
     },
+--[[
     [115209351507608] = {
         Name = "The Armory",
         PlaceVersion = 6910,
     },
+]]
     [155615604] = {
         Name = "Prison Life",
         PlaceVersion = 422,
