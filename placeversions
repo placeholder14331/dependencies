@@ -19,7 +19,7 @@ local placevers = {
 ]]
     [155615604] = {
         Name = "Prison Life",
-        PlaceVersion = 422,
+        PlaceVersion = 423,
     },
     [15561786880] = {
         Name = "QuickDraw: Legacy",
