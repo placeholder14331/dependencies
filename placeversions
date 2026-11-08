@@ -1,29 +1,20 @@
 local placevers = {
-    [13438553315] = {
-        Name = "Decaying Winter",
-        PlaceVersion = 3181,
-    },
-    [18259975825] = {
-        Name = "Grave/Digger",
-        PlaceVersion = 3159,
-    },
-    [114931763326993] = {
-        Name = "Decaying Winter Legacy",
-        PlaceVersion = 68,
-    },
---[[
-    [115209351507608] = {
-        Name = "The Armory",
-        PlaceVersion = 6910,
-    },
-]]
-    [155615604] = {
-        Name = "Prison Life",
-        PlaceVersion = 423,
-    },
-    [15561786880] = {
-        Name = "QuickDraw: Legacy",
-        PlaceVersion = 5946,
+    [13438553315] = { Name = "Decaying Winter", PlaceVersion = 3181 },
+    [112060227074307] = { Name = "Decaying Winter" },
+    [72144869714561] = { Name = "Decaying Winter" },
+    [114931763326993] = { Name = "Decaying Winter Legacy", PlaceVersion = 68 },
+    [109185433585492] = { Name = "Decaying Winter Legacy" },
+
+
+    Universes = {
+        [6190071862] = { Name = "Grave/Digger", PlaceVersion = 3159 },
+        [73885730] = { Name = "Prison Life", PlaceVersion = 423 },
+        [3293525400] = { Name = "Dummies vs Noobs" },
+        [1390601379] = { Name = "Combat Warriors" },
     },
 }
+
+placevers[18259975825] = placevers.Universes[6190071862]
+placevers[155615604] = placevers.Universes[73885730]
+
 return placevers
