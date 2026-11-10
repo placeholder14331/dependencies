@@ -3,7 +3,7 @@ local placevers = {
     [114931763326993] = { Name = "Decaying Winter Legacy", PlaceVersion = 68 },
 
     Universes = {
-        [6190071862] = { Name = "Grave/Digger", PlaceVersion = 3159 },
+        [6190071862] = { Name = "Grave/Digger", PlaceVersion = 3160 },
         [73885730] = { Name = "Prison Life", PlaceVersion = 423 },
         [3293525400] = { Name = "Dummies vs Noobs" },
         [1390601379] = { Name = "Combat Warriors" },
